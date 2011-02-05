@@ -89,11 +89,12 @@ class WingPeer extends BaseWingPeer {
     }
 
     public static function getBurnup() {
-        $data = self::getEvery5Minutes();
-        
         $sum = 0;
-        foreach ($data as $time => $number) {
-            $data[$time] = $sum += $number;
+
+        $data = array();
+        foreach (self::getEvery5Minutes() as $time => $number) {
+            $sum += $number;
+            $data[$time] = $sum;
         }
 
         return $data;
