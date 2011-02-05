@@ -68,7 +68,15 @@ class WingPeer extends BaseWingPeer {
 
 
             $ret[strtotime($str)] = (int)$rec['number'];
+
+            if (!isset($first)) {
+                $first = true;
+
+                $ret[strtotime($str) - (60 * 5)] = 0;
+            }
         }
+
+        ksort($ret);
 
         return $ret;
     }

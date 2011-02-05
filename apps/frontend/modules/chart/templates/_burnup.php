@@ -13,10 +13,13 @@ foreach ($points as $date => $point) {
 
 $max = max($axis);
 
-$axis_str = implode(',', $axis);
+$max += $max / 2;
 
-$url = 'http://chart.apis.google.com/chart?chxr=0,0,' . $max . '&chxt=y&chs=1000x225';
-$url .= '&cht=lc&chco=3D7930,FF9900&chd=t:' . $axis_str .'&chg=14.3,-1,1,1';
+$axis_str = implode(',', $axis);
+var_dump($axis_str);
+
+$url = 'http://chart.apis.google.com/chart?chf=a,s,00000087&chxr=0,0,' . $max . '&chxt=y&chs=1000x300';
+$url .= '&cht=lc&chco=3D7930,FF9900&chd=t:' . $axis_str .'&chg=30,-1,1,1';
 $url .- '&chls=5,4,0|1&chm=B,C5D4B5BB,0,0,0&chtt=wings+over+time';
 ?>
 <img src="<?php echo $url; ?>" alt="Wings over time" />
