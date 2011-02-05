@@ -1,0 +1,7 @@
+Wing:
+<?php for ($i = 1; $i <= 8; $i++): for ($x = 1; $x < 10; $x++): ?>
+  Wing_<?php echo $i; ?>_<?php echo $x; ?>:
+    user_id: User_<?php echoln($i); ?>
+    number: <?php echoln(rand(1, 15)); ?>
+    created_at: <?php echoln(strtotime($i * 5 . ' minutes ago')); ?>
+<?php endfor; endfor; ?>

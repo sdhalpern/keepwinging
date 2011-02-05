@@ -10,9 +10,6 @@
 	<style>
 	body {
 		background-color: #09F;
-        background-image: url('/images/watermark.png');
-        background-position: center;
-        background-repeat: no-repeat;
 	}
 	</style>
   </head>

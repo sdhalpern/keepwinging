@@ -10,4 +10,7 @@
  */
 class chartActions extends sfActions
 {
+    public function executeBurnup(sfWebRequest $request) {
+        
+    }
 }

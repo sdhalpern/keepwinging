@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user`
 (
-	`id` INTEGER(11)  NOT NULL,
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255)  NOT NULL,
 	PRIMARY KEY (`id`)
 )Engine=InnoDB;
@@ -26,10 +26,10 @@ DROP TABLE IF EXISTS `wing`;
 
 CREATE TABLE `wing`
 (
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`user_id` INTEGER(11)  NOT NULL,
 	`number` INTEGER(11)  NOT NULL,
 	`created_at` DATETIME  NOT NULL,
-	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	PRIMARY KEY (`id`),
 	INDEX `wing_FI_1` (`user_id`),
 	CONSTRAINT `wing_FK_1`

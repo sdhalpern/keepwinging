@@ -14,3 +14,9 @@ default_index:
 
 default:
   url:   /:module/:action/*
+
+data_count:
+  url: /api/count.json
+  param: { action: count, module: data }
+  requirements:
+    sf_format: json

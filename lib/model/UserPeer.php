@@ -17,5 +17,15 @@
  * @package    lib.model
  */
 class UserPeer extends BaseUserPeer {
-
+	public static function retrieveTopEaters() {
+		$c = new Criteria();
+		$c->addJoin(WingPeer::USER_ID, UserPeer::ID);
+		$c->addDescendingOrderByColumn('total');
+        self::addSelectColumns($c);
+        $c->addAsColumn('total', 'SUM(' . WingPeer::NUMBER . ')');
+        $c->addGroupByColumn(UserPeer::ID);
+		$c->setLimit(10);
+		
+		return self::doSelect($c);
+	}
 } // UserPeer

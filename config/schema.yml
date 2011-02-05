@@ -1,10 +1,11 @@
 propel:
 
   user:
-    id: { type: INTEGER, size: '11', primaryKey: true, required: true }
+    id: ~
     name: { type: VARCHAR, size: '255', required: true, unique: true }
     
   wing:
+    id: ~
     user_id: { type: INTEGER, size: '11', required: true, foreignTable: user, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
     number: { type: INTEGER, size: '11', required: true }
     created_at: { type: TIMESTAMP, required: true }

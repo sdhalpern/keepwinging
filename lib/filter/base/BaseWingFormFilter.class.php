@@ -38,10 +38,10 @@ abstract class BaseWingFormFilter extends BaseFormFilterPropel
   public function getFields()
   {
     return array(
+      'id'         => 'Number',
       'user_id'    => 'ForeignKey',
       'number'     => 'Number',
       'created_at' => 'Date',
-      'id'         => 'Number',
     );
   }
 }
