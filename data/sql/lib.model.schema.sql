@@ -14,15 +14,10 @@ CREATE TABLE `user`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255)  NOT NULL,
-	`tag_id` INTEGER(11)  NOT NULL,
+	`rfid_tag` VARCHAR(255)  NOT NULL,
+	`rfid_number` INTEGER(11)  NOT NULL,
 	`created_at` DATETIME,
-	PRIMARY KEY (`id`),
-	INDEX `user_FI_1` (`tag_id`),
-	CONSTRAINT `user_FK_1`
-		FOREIGN KEY (`tag_id`)
-		REFERENCES `tag` (`id`)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 )Engine=InnoDB;
 
 #-----------------------------------------------------------------------------
@@ -48,22 +43,6 @@ CREATE TABLE `wing`
 )Engine=InnoDB;
 
 #-----------------------------------------------------------------------------
-#-- tag
-#-----------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `tag`;
-
-
-CREATE TABLE `tag`
-(
-	`id` INTEGER  NOT NULL AUTO_INCREMENT,
-	`tag` VARCHAR(255)  NOT NULL,
-	`number` INTEGER(11)  NOT NULL,
-	`created_at` DATETIME,
-	PRIMARY KEY (`id`)
-)Engine=InnoDB;
-
-#-----------------------------------------------------------------------------
 #-- scan_log
 #-----------------------------------------------------------------------------
 
@@ -73,16 +52,10 @@ DROP TABLE IF EXISTS `scan_log`;
 CREATE TABLE `scan_log`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
-	`tag_id` INTEGER(11)  NOT NULL,
+	`tag` VARCHAR(255)  NOT NULL,
 	`skipped` TINYINT default 0 NOT NULL,
 	`created_at` DATETIME,
-	PRIMARY KEY (`id`),
-	INDEX `scan_log_FI_1` (`tag_id`),
-	CONSTRAINT `scan_log_FK_1`
-		FOREIGN KEY (`tag_id`)
-		REFERENCES `tag` (`id`)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+	PRIMARY KEY (`id`)
 )Engine=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier

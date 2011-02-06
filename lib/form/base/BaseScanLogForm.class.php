@@ -15,14 +15,14 @@ abstract class BaseScanLogForm extends BaseFormPropel
   {
     $this->setWidgets(array(
       'id'         => new sfWidgetFormInputHidden(),
-      'tag_id'     => new sfWidgetFormPropelChoice(array('model' => 'Tag', 'add_empty' => false)),
+      'tag'        => new sfWidgetFormInputText(),
       'skipped'    => new sfWidgetFormInputCheckbox(),
       'created_at' => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
       'id'         => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
-      'tag_id'     => new sfValidatorPropelChoice(array('model' => 'Tag', 'column' => 'id')),
+      'tag'        => new sfValidatorString(array('max_length' => 255)),
       'skipped'    => new sfValidatorBoolean(),
       'created_at' => new sfValidatorDateTime(array('required' => false)),
     ));

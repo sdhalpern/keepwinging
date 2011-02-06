@@ -2,18 +2,16 @@
 
 class userActions extends sfActions {
     public function executeRegister(sfWebRequest $request) {
-        $user = new UserForm();
+        $user = new User();
+        $user->setRfidTag($request->getParameter('key'));
 
-        $tag = new TagForm();
-        $tag->getObject()->setTag($request->getParameter('key'));
+        $user = new UserForm($user);
+        
 
         if ($request->getMethod() == 'POST') {
             $user->bind($request->getParameter($user->getName()));
-            $tag->bind($request->getParameter($tag->getName()));
 
-            if ($user->isValid() && $tag->isValid()) {
-                $tagObj = $tag->save();
-                $user->getObject()->setTag($tagObj);
+            if ($user->isValid()) {
                 $user->save();
 
                 $this->getUser()->setFlash('success', 'Thank you for registering!');
@@ -23,6 +21,5 @@ class userActions extends sfActions {
         }
 
         $this->user = $user;
-        $this->tag  = $tag;
     }
 }

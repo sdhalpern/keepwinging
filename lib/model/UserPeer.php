@@ -28,4 +28,11 @@ class UserPeer extends BaseUserPeer {
 		
 		return self::doSelect($c);
 	}
+
+    public static function retrieveByTag($tag) {
+        $c = new Criteria();
+        $c->add(self::RFID_TAG, $tag);
+
+        return self::doSelectOne($c);
+    }
 } // UserPeer

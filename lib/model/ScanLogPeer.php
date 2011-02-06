@@ -17,18 +17,4 @@
  * @package    lib.model
  */
 class ScanLogPeer extends BaseScanLogPeer {
-
-    /**
-     * Determine if a tag has been scanned recently
-     *
-     * @param Tag $tag
-     * @return bool
-     */
-    public static function scannedRecently(Tag $tag) {
-        $c = new Criteria();
-        $c->add(self::TAG_ID, $tag->getId());
-        $c->add(self::CREATED_AT, strtotime('30 seconds ago'));
-
-        return (bool) self::doCount($c);
-    }
 } // ScanLogPeer

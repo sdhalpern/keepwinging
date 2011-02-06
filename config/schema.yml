@@ -6,14 +6,15 @@ propel:
       size: 255
       required: true
       unique: true
-    tag_id:
-      type: INTEGER
+    rfid_tag:
+      type: varchar
+      size: 255
+      required: true
+      unique: true
+    rfid_number:
+      type: integer
       size: 11
       required: true
-      foreignTable: tag
-      foreignReference: id
-      onDelete: CASCADE
-      onUpdate: CASCADE
       unique: true
     created_at: ~
     
@@ -21,7 +22,7 @@ propel:
     id: ~
     user_id:
       type: INTEGER
-      size: '11'
+      size: 11
       required: true
       foreignTable: user
       foreignReference: id
@@ -29,34 +30,16 @@ propel:
       onUpdate: CASCADE
     number:
       type: INTEGER
-      size: '11'
-      required: true
-    created_at: ~
-
-  tag:
-    id: ~
-    tag:
-      type: varchar
-      size: 255
-      required: true
-      unique: true
-    number:
-      type: integer
       size: 11
       required: true
-      unique: true
     created_at: ~
 
   scan_log:
     id: ~
-    tag_id:
-      type: INTEGER
-      size: '11'
+    tag:
+      type: VARCHAR
+      size: 255
       required: true
-      foreignTable: tag
-      foreignReference: id
-      onDelete: CASCADE
-      onUpdate: CASCADE
     skipped:
       type: boolean
       required: true

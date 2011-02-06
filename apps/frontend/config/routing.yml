@@ -33,6 +33,12 @@ api_report:
     key: kyle
     sf_method: post
 
+api_registered:
+  url: /api/registered.json
+  param: { module: data, action: registered }
+  requirements:
+    sf_format: json
+
 user_register:
   url: /register/:key
   param: { module: user, action: register }

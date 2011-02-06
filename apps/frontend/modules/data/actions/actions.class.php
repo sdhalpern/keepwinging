@@ -20,6 +20,12 @@ class dataActions extends sfActions {
         return $this->renderJson($d);
     }
 
+    public function executeRegistered(sfWebRequest $request) {
+        $user = UserPeer::retrieveByTag($request->getParameter('tag'));
+
+        return $this->renderJson(array('registered' => $user instanceof User));
+    }
+
     protected function renderJson($data) {
         $this->getResponse()->setHttpHeader('Content-type', 'application/json');
         $this->renderText(json_encode($data));

@@ -1,12 +1,7 @@
-Tag:
-<?php for ($i = 1; $i <= 8; $i++): ?>
-  Tag_<?php echo $i; ?>:
-    tag: <?php echoln(uniqid()); ?>
-    number: <?php echoln($i); ?>
-<?php endfor; ?>
 User:
 <?php for ($i = 1; $i <= 8; $i++): ?>
   User_<?php echo $i; ?>:
-    tag_id: Tag_<?php echoln($i); ?>
     name: 'User <?php echo $i; ?>'
+    rfid_tag: Tag_<?php echoln($i); ?>
+    rfid_number: <?php echoln($i); ?>
 <?php endfor; ?>
