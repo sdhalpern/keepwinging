@@ -22,7 +22,7 @@ test:
 prod:
   propel:
     param:
-      dsn:        mysql:dbname=winger;host=localhost
+      dsn:        mysql:dbname=itrebal_winger;host=localhost
       username:   itrebal_winger
       password:   'zer0zer0zer01p3rcent'
 
