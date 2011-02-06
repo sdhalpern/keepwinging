@@ -16,7 +16,7 @@ function updateDataCount() {
     $.get('/api/count.json', function(data) {
         $('#consumption_total').text(data.eaten);
         $('#consumption_remain').text(data.remaining);
-        setTimeout('updateDataCount();', 1000);
+        setTimeout('updateDataCount();', 10000);
     });
 }
 
