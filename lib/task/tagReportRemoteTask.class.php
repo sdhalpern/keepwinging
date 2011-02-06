@@ -42,6 +42,8 @@ EOF;
             $r = $this->executeQuery('report', array('tag' => $tag));
             if (!$r->success) {
                 $this->fatal('Reporting failed.');
+            } else {
+                echo "$tag now has $r->number wings.\r\n";
             }
             exit(0);
         }

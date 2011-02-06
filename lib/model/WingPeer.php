@@ -50,7 +50,12 @@ class WingPeer extends BaseWingPeer {
     }
 
     public static function getRemaining() {
-        return self::getTotal() - self::getEaten();
+        $r = self::getTotal() - self::getEaten();
+        if ($r < 0) {
+            $r = 0;
+        }
+
+        return $r;
     }
 
     public static function getEvery5Minutes() {
