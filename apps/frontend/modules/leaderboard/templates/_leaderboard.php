@@ -13,7 +13,7 @@ $perWing = 220 / $max;
 <div class="dash_right">
     <?php foreach ($users as $user): ?>
         <div class="leader_row">
-            <img src="/images/justin.jpg" height="50" width="50" alt="" class="leader_pic" />
+            <img src="/uploads/<?php echo $user->getPicture(); ?>" height="50" width="50" alt="" class="leader_pic" />
             <div class="leader_data">
                 <div class="leader_text">
                 <?php echo $user; ?><br />

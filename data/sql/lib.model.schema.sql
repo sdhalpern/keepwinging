@@ -16,7 +16,6 @@ CREATE TABLE `user`
 	`name` VARCHAR(255)  NOT NULL,
 	`picture` VARCHAR(255)  NOT NULL,
 	`rfid_tag` VARCHAR(255)  NOT NULL,
-	`rfid_number` INTEGER(11)  NOT NULL,
 	`created_at` DATETIME,
 	PRIMARY KEY (`id`)
 )Engine=InnoDB;
