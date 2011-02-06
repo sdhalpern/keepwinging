@@ -24,4 +24,14 @@ class User extends BaseUser {
     public function getWingConsumption() {
         return WingPeer::getEatenByUser($this);
     }
+
+    
+    public function incrementWingConsumption() {
+        $wing = new Wing();
+        $wing->setNumber(5);
+        $wing->setUser($this);
+        $wing->save();
+
+        return self::getWingConsumption();
+    }
 } // User

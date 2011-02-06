@@ -17,8 +17,7 @@ class reportActions extends sfActions
   */
   public function executeIndex(sfWebRequest $request)
   {
-    $tag = $request->getPostParameter('tag');
 
-    
+
   }
 }

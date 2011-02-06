@@ -28,26 +28,46 @@ EOF;
 
     protected function execute($arguments = array(), $options = array()) {
 
-        $tag = urlencode($arguments['tag']);
-        $x = file_get_contents('http://keepwinging.com/api/registered.json?tag=' . $tag);
+        $tag = $arguments['tag'];
 
-        if (!$x) {
-            echo 'Could not access server.' . "\r\n";
-            exit(1);
-        }
+        echo "Handling $tag\r\n";
 
-        $x = json_decode($x);
-        if (!$x) {
-            echo 'Communication error.' . "\r\n";
-            exit(1);
-        }
 
-        if (!$x->registered) {
+        $r = $this->executeQuery('registered', array('tag' => $tag));
+
+        if (!$r->registered) {
             shell_exec('open http://keepwinging.com/register/' . $tag);
+            exit(0);
+        } else {
+            $r = $this->executeQuery('report', array('tag' => $tag));
+            if (!$r->success) {
+                $this->fatal('Reporting failed.');
+            }
+            exit(0);
         }
-
-        // add your code here
-        shell_exec('say hello');
     }
 
+    protected function executeQuery($endpoint, $parameters) {
+        $url = 'http://keepwinging.com/api/' . $endpoint . '.json?';
+        $url .= http_build_query($parameters);
+
+        $x = @file_get_contents($url);
+        if (!$x) {
+            $this->fatal('Could not access server.');
+            exit(1);
+        }
+
+        $x = @json_decode($x);
+        if (!$x) {
+            $this->fatal('Comunication error.');
+        }
+
+        return $x;
+    }
+
+    protected function fatal($msg) {
+        shell_exec('say "WARNING: ' . $msg . '"');
+        echo $msg . "\r\n";
+        exit(1);
+    }
 }

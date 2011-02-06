@@ -1,6 +1,7 @@
 <?php
 
 class dataActions extends sfActions {
+
     public function executeCount(sfWebRequest $request) {
         $eaten = WingPeer::getEaten();
         $remain = WingPeer::getRemaining();
@@ -26,9 +27,24 @@ class dataActions extends sfActions {
         return $this->renderJson(array('registered' => $user instanceof User));
     }
 
+    public function executeReport(sfWebRequest $request) {
+
+        $tag = $request->getPostParameter('tag');
+
+        $user = UserPeer::retrieveByTag($tag);
+
+        if (!$user instanceof User) {
+            return $this->renderJson(array('succes' => false));
+        }
+
+        $new_number = $user->incrementWingConsumption();
+        return $this->renderJson(array('success' => true, 'number' => $new_number));
+    }
+
     protected function renderJson($data) {
         $this->getResponse()->setHttpHeader('Content-type', 'application/json');
         $this->renderText(json_encode($data));
         return sfView::NONE;
     }
+
 }

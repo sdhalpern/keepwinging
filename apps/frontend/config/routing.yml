@@ -27,11 +27,10 @@ api_burnup:
   param: { module: chart, action: burnup }
 
 api_report:
-  url: /api/report
-  param: { module: report, action: index }
+  url: /api/report.json
+  param: { module: data, action: report }
   requirements:
-    key: kyle
-    sf_method: post
+    sf_format: json
 
 api_registered:
   url: /api/registered.json
