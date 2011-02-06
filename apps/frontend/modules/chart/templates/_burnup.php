@@ -2,7 +2,7 @@
 $num = count($points);
 
 foreach ($points as $date => $point) {
-    $axis[] = $point;
+    $axis[] = rand(0,30);
 }
 $axis_str = implode(',', $axis);
 
