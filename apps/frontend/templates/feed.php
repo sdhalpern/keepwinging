@@ -33,15 +33,9 @@
 
         <div class="container">
             <div class="header">
-                <?php $used = 0; ?>
-                <?php if ($sf_user->hasFlash('success')): $used++; ?>
-                <div style="border: 1px solid #D3EAA4; background: #E5F3C8;"><?php echo $sf_user->getFlash('success'); ?></div>
-                <?php endif; ?>
-                <?php if ($sf_user->hasFlash('notice')): $used++; ?>
-                <div style="border: 1px solid #FF0000; background: #fff7d7;"><?php echo $sf_user->getFlash('notice'); ?></div>
-                <?php endif; ?>
+                <div style="border: 1px solid #D3EAA4; background: #E5F3C8;"><a href="/dashboard">See the Dashboard</a></div>
             </div>
-            <?php echo str_repeat('<br style="clear: both;" />', $used); ?>
+            <br style="clear: both;" />
         </div>
             <?php echo $sf_content ?>
 
