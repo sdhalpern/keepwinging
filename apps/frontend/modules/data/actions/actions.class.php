@@ -29,12 +29,12 @@ class dataActions extends sfActions {
 
     public function executeReport(sfWebRequest $request) {
 
-        $tag = $request->getPostParameter('tag');
+        $tag = $request->getGetParameter('tag');
 
         $user = UserPeer::retrieveByTag($tag);
 
         if (!$user instanceof User) {
-            return $this->renderJson(array('succes' => false));
+            return $this->renderJson(array('success' => false));
         }
 
         $new_number = $user->incrementWingConsumption();
