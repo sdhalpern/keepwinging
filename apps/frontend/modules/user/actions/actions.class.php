@@ -13,7 +13,12 @@ class userActions extends sfActions {
                         $request->getFiles($user->getName()));
 
             if ($user->isValid()) {
-                $user->save();
+                $user = $user->save();
+
+                $e = new Feed();
+                $e->setUser($user);
+                $e->setText(' has just registered.');
+                $e->save();
 
                 $this->getUser()->setFlash('success', 'Thank you for registering!');
                 $this->getUser()->setFlash('notice', 'Remember to scan your key again before taking wings.');

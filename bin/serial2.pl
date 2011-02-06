@@ -7,6 +7,8 @@ use FindBin '$Bin';
 use Device::SerialPort;
 use Time::HiRes 'usleep';
 
+my $SYMFONY = "$Bin/../symfony";
+
 #
 # There was a log file opened here, but it wasn ever used.
 # I have included the proper (i.e., post-perl 5.8) way.
@@ -54,12 +56,12 @@ while (1) {
             if ($tag eq $last_tag) {
                 # prevent double check-ins
                 if (time - $start > 30) {
-                    print "CHECKIN: ", $tag;
+                    system $SYMFONY, 'tag:reportRemote', $tag;
                     $start = time;
                 }
             } else {
                 $start = time;
-                print "CHECKIN: ", $tag;
+                system $SYMFONY, 'tag:reportRemote', $tag;
                 $last_tag = $tag;
             }
         }

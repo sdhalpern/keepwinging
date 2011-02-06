@@ -38,6 +38,20 @@ class dataActions extends sfActions {
         }
 
         $new_number = $user->incrementWingConsumption();
+
+
+        $e = new Feed();
+        $e->setUser($user);
+        if ($new_number == 100) {
+            $e->setText(' has just gotten 5 more wings, PUTTING THEM AT 100 WINGS!');
+        } elseif ($new_number == 5) {
+            $e->setText(' has just gotten their first five wings!');
+        } else {
+            $e->setText(' has just gotten 5 more wings, putting them up to ' . $new_number . ' wings!');
+        }
+        $e->save();
+        
+
         return $this->renderJson(array('success' => true, 'number' => $new_number));
     }
 
