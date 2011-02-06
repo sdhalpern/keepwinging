@@ -5,7 +5,7 @@
 		<div class="contentText">
             <span class="fatty"><?php echo $item->getUser(); ?></span>
             <?php echo $item->getText(); ?>
-            <span id="<?php echo $tag = md5(uniqid(); ?>" class="timeago" title="<?php echo $item->getCreatedAt('c'); ?>">
+            <span id="<?php echo $tag = md5(uniqid()); ?>" class="timeago" title="<?php echo $item->getCreatedAt('c'); ?>">
                 <script>$('#<?php echo $tag; ?>').val(jQuery.timeago("<?php echo $item->getCreatedAt('c'); ?>")); </script>
             </span></div>
 	</div>
