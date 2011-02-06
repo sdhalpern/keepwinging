@@ -1,1 +1,1 @@
-<?php include_component('chart', 'burnup'); ?>
+<?php include_component('chart', 'burnup', array('js' => false)); ?>
