@@ -30,7 +30,9 @@ $RFID->are_match("\n");
 my $start = time;
 my $last_tag = undef;
 
-while ((my $buf = $RFID->lookfor) eq "") {
+while (1) {
+    my $buf = $RFID->lookfor(12);
+
     unless (defined $buf) {
         die "Aborted without match\n";
     }
