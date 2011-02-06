@@ -5,4 +5,6 @@ deploy:
 	ssh yakko "rm -rf ./keepwinging.com/cache/*"
 	ssh yakko "rm -rf ./keepwinging.com/log/*"
 	ssh yakko ./keepwinging.com/symfony project:enable prod frontend
+	ssh yakko "rm -rf ./keepwinging.com/cache/*"
+	ssh yakko "rm -rf ./keepwinging.com/log/*"
 	ssh yakko ./keepwinging.com/symfony project:permissions
