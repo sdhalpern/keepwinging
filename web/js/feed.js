@@ -8,7 +8,7 @@ function updateDataFeed() {
         $('#feed_replace').html(data);
         $('#feed_replace').attr('id', '#feed_load_' + window.since);
         setTimeout('updateDataFeed();', 1000);
-        jQuery('#feed_load_' + window.since + " .timeago").timeago();
+        //jQuery('#feed_load_' + window.since + " .timeago").timeago();
     }, 'html');
 }
 $(document).ready(function() { updateDataFeed(); });
