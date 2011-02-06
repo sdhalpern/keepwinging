@@ -20,4 +20,8 @@ class User extends BaseUser {
     public function __toString() {
         return $this->getName();
     }
+
+    public function getWingConsumption() {
+        return WingPeer::getEatenByUser($this);
+    }
 } // User

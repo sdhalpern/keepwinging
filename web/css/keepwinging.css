@@ -1,0 +1,164 @@
+﻿body{
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 28px;
+    font-family: Helvetica,Arial,sansserif;
+    text-align: center;
+}
+
+a img{
+    border-style: none;
+}
+
+.rightbump{
+    margin-right: 30px;
+}
+
+.container{
+    clear:left; 
+    width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.twitter_stream_container{
+    width: 100%;
+    margin-bottom: 25px;
+    background-color: #0099ff;
+    text-align: center;
+    margin-left: 0;
+    margin-right: 0;
+    float: left;
+    color: #fff;
+}
+
+.twitter_stream_logo{
+    background-color: #0099ff;
+    float: left;
+    height: 70px;
+    width: 150px;
+    text-align: center;
+}
+
+.twitter_stream{
+    float:left;
+    padding-top: 25px;
+    background-color: #0099ff;
+    width: 780px;
+    padding-left: 20px;
+    font-size: 18px;
+}
+
+.header{
+    width: 100%;
+    margin-bottom: 10px;
+    height: 10px;
+}
+
+.dash_left{
+    float: left;
+    width: 620px;
+    #background-color: blue;
+}
+
+.headerbox{
+    float: left;
+    width: 275px;
+    background-color: #eee;
+    padding: 5px 10px;
+    font-size: 15px;
+    font-weight: bold;
+    border-top: 10px solid #fff;
+    color: black;
+    margin-bottom:15px;
+}
+
+.boxes{
+    float: left;
+    width: 620px;
+    #background-color: orange;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.box {
+    float: left;
+    width: 295px;
+    height: 160px;
+    background-color: #0099ff;
+}
+
+.totalusersheadline {
+    font-size: 15px;
+    color: white;
+    text-align: right;
+    padding-right: 10px;
+    padding-top: 20px;
+}
+
+.totalusersnumber {
+    font-size: 115px;
+    color: white;
+    font-weight: bold;
+    line-height: 100px;
+    text-align: right;
+    letter-spacing: -7px;
+    padding-right: 15px;
+}
+
+.linechart{
+    clear: left;
+    width: 610px;
+    height: 300px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px 5px;
+}
+
+.dash_right{
+    float: left;
+    width: 280px;
+    #background-color: red;
+    padding: 5px 5px;
+    margin-left: 30px;
+    height: 533px;
+    border: 1px solid #ccc;
+}
+
+.leader_row{
+    float:left;
+    width: 300px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.leader_pic{
+    float: left;
+    width: 50px;
+    margin-right: 10px;
+}
+
+.leader_data{
+    float: left;
+    width: 230px;
+}
+
+.leader_text{
+    font-size: 18px;
+    padding-top: 2px;
+}
+
+.leader_progress{
+    background-color:#0099ff;
+    color:#fff;
+}
+
+.footer{
+    clear: left;
+    color: #cccccc;
+    font-size: 14px;
+    margin-top:50px;
+    padding-top: 10px;
+}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base class that represents a row from the 'wing' table.
+ * Base class that represents a row from the 'tag' table.
  *
  * 
  *
@@ -11,14 +11,14 @@
  *
  * @package    lib.model.om
  */
-abstract class BaseWing extends BaseObject  implements Persistent {
+abstract class BaseTag extends BaseObject  implements Persistent {
 
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        WingPeer
+	 * @var        TagPeer
 	 */
 	protected static $peer;
 
@@ -29,16 +29,16 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	protected $id;
 
 	/**
+	 * The value for the tag field.
+	 * @var        string
+	 */
+	protected $tag;
+
+	/**
 	 * The value for the user_id field.
 	 * @var        int
 	 */
 	protected $user_id;
-
-	/**
-	 * The value for the number field.
-	 * @var        int
-	 */
-	protected $number;
 
 	/**
 	 * The value for the created_at field.
@@ -50,6 +50,16 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * @var        User
 	 */
 	protected $aUser;
+
+	/**
+	 * @var        array ScanLog[] Collection to store aggregation of ScanLog objects.
+	 */
+	protected $collScanLogs;
+
+	/**
+	 * @var        Criteria The criteria used to select the current contents of collScanLogs.
+	 */
+	private $lastScanLogCriteria = null;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -67,7 +77,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 	// symfony behavior
 	
-	const PEER = 'WingPeer';
+	const PEER = 'TagPeer';
 
 	/**
 	 * Get the [id] column value.
@@ -80,6 +90,16 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	}
 
 	/**
+	 * Get the [tag] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getTag()
+	{
+		return $this->tag;
+	}
+
+	/**
 	 * Get the [user_id] column value.
 	 * 
 	 * @return     int
@@ -87,16 +107,6 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	public function getUserId()
 	{
 		return $this->user_id;
-	}
-
-	/**
-	 * Get the [number] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getNumber()
-	{
-		return $this->number;
 	}
 
 	/**
@@ -141,7 +151,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Tag The current object (for fluent API support)
 	 */
 	public function setId($v)
 	{
@@ -151,17 +161,37 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = WingPeer::ID;
+			$this->modifiedColumns[] = TagPeer::ID;
 		}
 
 		return $this;
 	} // setId()
 
 	/**
+	 * Set the value of [tag] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     Tag The current object (for fluent API support)
+	 */
+	public function setTag($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->tag !== $v) {
+			$this->tag = $v;
+			$this->modifiedColumns[] = TagPeer::TAG;
+		}
+
+		return $this;
+	} // setTag()
+
+	/**
 	 * Set the value of [user_id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Tag The current object (for fluent API support)
 	 */
 	public function setUserId($v)
 	{
@@ -171,7 +201,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 		if ($this->user_id !== $v) {
 			$this->user_id = $v;
-			$this->modifiedColumns[] = WingPeer::USER_ID;
+			$this->modifiedColumns[] = TagPeer::USER_ID;
 		}
 
 		if ($this->aUser !== null && $this->aUser->getId() !== $v) {
@@ -182,31 +212,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	} // setUserId()
 
 	/**
-	 * Set the value of [number] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
-	 */
-	public function setNumber($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->number !== $v) {
-			$this->number = $v;
-			$this->modifiedColumns[] = WingPeer::NUMBER;
-		}
-
-		return $this;
-	} // setNumber()
-
-	/**
 	 * Sets the value of [created_at] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Tag The current object (for fluent API support)
 	 */
 	public function setCreatedAt($v)
 	{
@@ -243,7 +253,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 					)
 			{
 				$this->created_at = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = WingPeer::CREATED_AT;
+				$this->modifiedColumns[] = TagPeer::CREATED_AT;
 			}
 		} // if either are not null
 
@@ -283,8 +293,8 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-			$this->number = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+			$this->tag = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->user_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
 			$this->created_at = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->resetModified();
 
@@ -295,10 +305,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 			// FIXME - using NUM_COLUMNS may be clearer.
-			return $startcol + 4; // 4 = WingPeer::NUM_COLUMNS - WingPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = TagPeer::NUM_COLUMNS - TagPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating Wing object", $e);
+			throw new PropelException("Error populating Tag object", $e);
 		}
 	}
 
@@ -344,13 +354,13 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(TagPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = WingPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = TagPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -361,6 +371,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aUser = null;
+			$this->collScanLogs = null;
+			$this->lastScanLogCriteria = null;
+
 		} // if (deep)
 	}
 
@@ -380,14 +393,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(TagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseWing:delete:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseTag:delete:pre') as $callable)
 			{
 			  if (call_user_func($callable, $this, $con))
 			  {
@@ -398,10 +411,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 			if ($ret) {
-				WingPeer::doDelete($this, $con);
+				TagPeer::doDelete($this, $con);
 				$this->postDelete($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseWing:delete:post') as $callable)
+				foreach (sfMixer::getCallables('BaseTag:delete:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con);
 				}
@@ -437,7 +450,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(TagPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
@@ -445,7 +458,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		try {
 			$ret = $this->preSave($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseWing:save:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseTag:save:pre') as $callable)
 			{
 			  if (is_integer($affectedRows = call_user_func($callable, $this, $con)))
 			  {
@@ -460,7 +473,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			if ($isInsert) {
 				$ret = $ret && $this->preInsert($con);
 				// symfony_timestampable behavior
-				if (!$this->isColumnModified(WingPeer::CREATED_AT))
+				if (!$this->isColumnModified(TagPeer::CREATED_AT))
 				{
 				  $this->setCreatedAt(time());
 				}
@@ -477,12 +490,12 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				}
 				$this->postSave($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseWing:save:post') as $callable)
+				foreach (sfMixer::getCallables('BaseTag:save:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con, $affectedRows);
 				}
 
-				WingPeer::addInstanceToPool($this);
+				TagPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -524,13 +537,13 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = WingPeer::ID;
+				$this->modifiedColumns[] = TagPeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
-					$pk = WingPeer::doInsert($this, $con);
+					$pk = TagPeer::doInsert($this, $con);
 					$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which
 										 // should always be true here (even though technically
 										 // BasePeer::doInsert() can insert multiple rows).
@@ -539,10 +552,18 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 					$this->setNew(false);
 				} else {
-					$affectedRows += WingPeer::doUpdate($this, $con);
+					$affectedRows += TagPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
+			}
+
+			if ($this->collScanLogs !== null) {
+				foreach ($this->collScanLogs as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
 			}
 
 			$this->alreadyInSave = false;
@@ -623,10 +644,18 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 
-			if (($retval = WingPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = TagPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collScanLogs !== null) {
+					foreach ($this->collScanLogs as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -646,7 +675,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = WingPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = TagPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -665,10 +694,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getUserId();
+				return $this->getTag();
 				break;
 			case 2:
-				return $this->getNumber();
+				return $this->getUserId();
 				break;
 			case 3:
 				return $this->getCreatedAt();
@@ -692,11 +721,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = WingPeer::getFieldNames($keyType);
+		$keys = TagPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getUserId(),
-			$keys[2] => $this->getNumber(),
+			$keys[1] => $this->getTag(),
+			$keys[2] => $this->getUserId(),
 			$keys[3] => $this->getCreatedAt(),
 		);
 		return $result;
@@ -714,7 +743,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = WingPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = TagPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -733,10 +762,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setUserId($value);
+				$this->setTag($value);
 				break;
 			case 2:
-				$this->setNumber($value);
+				$this->setUserId($value);
 				break;
 			case 3:
 				$this->setCreatedAt($value);
@@ -763,11 +792,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = WingPeer::getFieldNames($keyType);
+		$keys = TagPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setNumber($arr[$keys[2]]);
+		if (array_key_exists($keys[1], $arr)) $this->setTag($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setUserId($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
 	}
 
@@ -778,12 +807,12 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(WingPeer::DATABASE_NAME);
+		$criteria = new Criteria(TagPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(WingPeer::ID)) $criteria->add(WingPeer::ID, $this->id);
-		if ($this->isColumnModified(WingPeer::USER_ID)) $criteria->add(WingPeer::USER_ID, $this->user_id);
-		if ($this->isColumnModified(WingPeer::NUMBER)) $criteria->add(WingPeer::NUMBER, $this->number);
-		if ($this->isColumnModified(WingPeer::CREATED_AT)) $criteria->add(WingPeer::CREATED_AT, $this->created_at);
+		if ($this->isColumnModified(TagPeer::ID)) $criteria->add(TagPeer::ID, $this->id);
+		if ($this->isColumnModified(TagPeer::TAG)) $criteria->add(TagPeer::TAG, $this->tag);
+		if ($this->isColumnModified(TagPeer::USER_ID)) $criteria->add(TagPeer::USER_ID, $this->user_id);
+		if ($this->isColumnModified(TagPeer::CREATED_AT)) $criteria->add(TagPeer::CREATED_AT, $this->created_at);
 
 		return $criteria;
 	}
@@ -798,9 +827,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(WingPeer::DATABASE_NAME);
+		$criteria = new Criteria(TagPeer::DATABASE_NAME);
 
-		$criteria->add(WingPeer::ID, $this->id);
+		$criteria->add(TagPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -831,18 +860,32 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of Wing (or compatible) type.
+	 * @param      object $copyObj An object of Tag (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 
+		$copyObj->setTag($this->tag);
+
 		$copyObj->setUserId($this->user_id);
 
-		$copyObj->setNumber($this->number);
-
 		$copyObj->setCreatedAt($this->created_at);
+
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getScanLogs() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addScanLog($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
 
 
 		$copyObj->setNew(true);
@@ -860,7 +903,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     Wing Clone of current object.
+	 * @return     Tag Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -879,12 +922,12 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     WingPeer
+	 * @return     TagPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new WingPeer();
+			self::$peer = new TagPeer();
 		}
 		return self::$peer;
 	}
@@ -893,7 +936,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * Declares an association between this object and a User object.
 	 *
 	 * @param      User $v
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Tag The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
 	public function setUser(User $v = null)
@@ -909,7 +952,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		// Add binding for other direction of this n:n relationship.
 		// If this object has already been added to the User object, it will not be re-added.
 		if ($v !== null) {
-			$v->addWing($this);
+			$v->addTag($this);
 		}
 
 		return $this;
@@ -932,10 +975,164 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			   to this object.  This level of coupling may, however, be
 			   undesirable since it could result in an only partially populated collection
 			   in the referenced object.
-			   $this->aUser->addWings($this);
+			   $this->aUser->addTags($this);
 			 */
 		}
 		return $this->aUser;
+	}
+
+	/**
+	 * Clears out the collScanLogs collection (array).
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addScanLogs()
+	 */
+	public function clearScanLogs()
+	{
+		$this->collScanLogs = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collScanLogs collection (array).
+	 *
+	 * By default this just sets the collScanLogs collection to an empty array (like clearcollScanLogs());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initScanLogs()
+	{
+		$this->collScanLogs = array();
+	}
+
+	/**
+	 * Gets an array of ScanLog objects which contain a foreign key that references this object.
+	 *
+	 * If this collection has already been initialized with an identical Criteria, it returns the collection.
+	 * Otherwise if this Tag has previously been saved, it will retrieve
+	 * related ScanLogs from storage. If this Tag is new, it will return
+	 * an empty collection or the current collection, the criteria is ignored on a new object.
+	 *
+	 * @param      PropelPDO $con
+	 * @param      Criteria $criteria
+	 * @return     array ScanLog[]
+	 * @throws     PropelException
+	 */
+	public function getScanLogs($criteria = null, PropelPDO $con = null)
+	{
+		if ($criteria === null) {
+			$criteria = new Criteria(TagPeer::DATABASE_NAME);
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collScanLogs === null) {
+			if ($this->isNew()) {
+			   $this->collScanLogs = array();
+			} else {
+
+				$criteria->add(ScanLogPeer::TAG_ID, $this->id);
+
+				ScanLogPeer::addSelectColumns($criteria);
+				$this->collScanLogs = ScanLogPeer::doSelect($criteria, $con);
+			}
+		} else {
+			// criteria has no effect for a new object
+			if (!$this->isNew()) {
+				// the following code is to determine if a new query is
+				// called for.  If the criteria is the same as the last
+				// one, just return the collection.
+
+
+				$criteria->add(ScanLogPeer::TAG_ID, $this->id);
+
+				ScanLogPeer::addSelectColumns($criteria);
+				if (!isset($this->lastScanLogCriteria) || !$this->lastScanLogCriteria->equals($criteria)) {
+					$this->collScanLogs = ScanLogPeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastScanLogCriteria = $criteria;
+		return $this->collScanLogs;
+	}
+
+	/**
+	 * Returns the number of related ScanLog objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related ScanLog objects.
+	 * @throws     PropelException
+	 */
+	public function countScanLogs(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if ($criteria === null) {
+			$criteria = new Criteria(TagPeer::DATABASE_NAME);
+		} else {
+			$criteria = clone $criteria;
+		}
+
+		if ($distinct) {
+			$criteria->setDistinct();
+		}
+
+		$count = null;
+
+		if ($this->collScanLogs === null) {
+			if ($this->isNew()) {
+				$count = 0;
+			} else {
+
+				$criteria->add(ScanLogPeer::TAG_ID, $this->id);
+
+				$count = ScanLogPeer::doCount($criteria, false, $con);
+			}
+		} else {
+			// criteria has no effect for a new object
+			if (!$this->isNew()) {
+				// the following code is to determine if a new query is
+				// called for.  If the criteria is the same as the last
+				// one, just return count of the collection.
+
+
+				$criteria->add(ScanLogPeer::TAG_ID, $this->id);
+
+				if (!isset($this->lastScanLogCriteria) || !$this->lastScanLogCriteria->equals($criteria)) {
+					$count = ScanLogPeer::doCount($criteria, false, $con);
+				} else {
+					$count = count($this->collScanLogs);
+				}
+			} else {
+				$count = count($this->collScanLogs);
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * Method called to associate a ScanLog object to this object
+	 * through the ScanLog foreign key attribute.
+	 *
+	 * @param      ScanLog $l ScanLog
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addScanLog(ScanLog $l)
+	{
+		if ($this->collScanLogs === null) {
+			$this->initScanLogs();
+		}
+		if (!in_array($l, $this->collScanLogs, true)) { // only add it if the **same** object is not already associated
+			array_push($this->collScanLogs, $l);
+			$l->setTag($this);
+		}
 	}
 
 	/**
@@ -950,8 +1147,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collScanLogs) {
+				foreach ((array) $this->collScanLogs as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		$this->collScanLogs = null;
 			$this->aUser = null;
 	}
 
@@ -962,9 +1165,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function __call($method, $arguments)
 	{
-	  if (!$callable = sfMixer::getCallable('BaseWing:'.$method))
+	  if (!$callable = sfMixer::getCallable('BaseTag:'.$method))
 	  {
-	    throw new sfException(sprintf('Call to undefined method BaseWing::%s', $method));
+	    throw new sfException(sprintf('Call to undefined method BaseTag::%s', $method));
 	  }
 	
 	  array_unshift($arguments, $this);
@@ -972,4 +1175,4 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	  return call_user_func_array($callable, $arguments);
 	}
 
-} // BaseWing
+} // BaseTag

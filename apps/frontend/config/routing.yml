@@ -6,6 +6,21 @@ homepage:
   url:   /
   param: { module: default, action: index }
 
+data_count:
+  url: /api/count.json
+  param: { action: count, module: data }
+  requirements:
+    sf_format: json
+
+api_report:
+  url: /api/report
+  param: { module: report, action: index }
+  requirements:
+    key: kyle
+    sf_method: post
+
+
+
 # generic rules
 # please, remove them by adding more specific rules
 default_index:
@@ -14,9 +29,3 @@ default_index:
 
 default:
   url:   /:module/:action/*
-
-data_count:
-  url: /api/count.json
-  param: { action: count, module: data }
-  requirements:
-    sf_format: json

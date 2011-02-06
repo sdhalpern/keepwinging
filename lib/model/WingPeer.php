@@ -22,6 +22,20 @@ class WingPeer extends BaseWingPeer {
         return 1000;
     }
 
+    public static function getEatenByUser(User $user) {
+        $sql = 'SELECT SUM(wing.number) AS number FROM wing WHERE wing.user_id = :user_id;';
+
+        $con = Propel::getConnection();
+        $stmt = $con->prepare($sql);
+        $stmt->bindValue(':user_id', $user->getId(), PDO::PARAM_INT);
+        $r = $stmt->execute();
+        if (!$r) {
+            return 0;
+        }
+
+        return $stmt->fetchColumn(0);
+    }
+
     public static function getEaten() {
         $sql = 'SELECT SUM(wing.number) AS number FROM wing;';
 

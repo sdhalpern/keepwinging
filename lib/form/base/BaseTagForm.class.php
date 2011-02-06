@@ -1,33 +1,33 @@
 <?php
 
 /**
- * Wing form base class.
+ * Tag form base class.
  *
- * @method Wing getObject() Returns the current form's model object
+ * @method Tag getObject() Returns the current form's model object
  *
  * @package    Keep Winging
  * @subpackage form
  * @author     Graham Christensen
  */
-abstract class BaseWingForm extends BaseFormPropel
+abstract class BaseTagForm extends BaseFormPropel
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'         => new sfWidgetFormInputHidden(),
+      'tag'        => new sfWidgetFormInputText(),
       'user_id'    => new sfWidgetFormPropelChoice(array('model' => 'User', 'add_empty' => false)),
-      'number'     => new sfWidgetFormInputText(),
       'created_at' => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
       'id'         => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
+      'tag'        => new sfValidatorString(array('max_length' => 255)),
       'user_id'    => new sfValidatorPropelChoice(array('model' => 'User', 'column' => 'id')),
-      'number'     => new sfValidatorInteger(array('min' => -2147483648, 'max' => 2147483647)),
       'created_at' => new sfValidatorDateTime(array('required' => false)),
     ));
 
-    $this->widgetSchema->setNameFormat('wing[%s]');
+    $this->widgetSchema->setNameFormat('tag[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -36,7 +36,7 @@ abstract class BaseWingForm extends BaseFormPropel
 
   public function getModelName()
   {
-    return 'Wing';
+    return 'Tag';
   }
 
 
