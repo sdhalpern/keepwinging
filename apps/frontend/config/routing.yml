@@ -32,3 +32,7 @@ api_report:
   requirements:
     key: kyle
     sf_method: post
+
+user_register:
+  url: /register
+  param: { module: user, action: register }

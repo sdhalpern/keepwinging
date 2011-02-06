@@ -1,23 +1,64 @@
 propel:
-
   user:
     id: ~
-    name: { type: VARCHAR, size: '255', required: true, unique: true }
+    name:
+      type: VARCHAR
+      size: 255
+      required: true
+      unique: true
+    tag_id:
+      type: INTEGER
+      size: 11
+      required: true
+      foreignTable: tag
+      foreignReference: id
+      onDelete: CASCADE
+      onUpdate: CASCADE
+      unique: true
+    created_at: ~
     
   wing:
     id: ~
-    user_id: { type: INTEGER, size: '11', required: true, foreignTable: user, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
-    number: { type: INTEGER, size: '11', required: true }
-    created_at: ~
-
-  scan_log:
-    id: ~
-    tag_id: { type: INTEGER, size: '11', required: true, foreignTable: tag, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
-    skipped: { type: boolean, required: true, default: false }
+    user_id:
+      type: INTEGER
+      size: '11'
+      required: true
+      foreignTable: user
+      foreignReference: id
+      onDelete: CASCADE
+      onUpdate: CASCADE
+    number:
+      type: INTEGER
+      size: '11'
+      required: true
     created_at: ~
 
   tag:
     id: ~
-    tag: { type: varchar, size: '255', required: true, unique: true }
-    user_id: { type: INTEGER, size: '11', required: false, foreignTable: user, foreignReference: id, onDelete: CASCADE, onUpdate: CASCADE }
+    tag:
+      type: varchar
+      size: 255
+      required: true
+      unique: true
+    number:
+      type: integer
+      size: 11
+      required: true
+      unique: true
+    created_at: ~
+
+  scan_log:
+    id: ~
+    tag_id:
+      type: INTEGER
+      size: '11'
+      required: true
+      foreignTable: tag
+      foreignReference: id
+      onDelete: CASCADE
+      onUpdate: CASCADE
+    skipped:
+      type: boolean
+      required: true
+      default: false
     created_at: ~

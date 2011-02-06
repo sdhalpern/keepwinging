@@ -17,17 +17,4 @@
  * @package    lib.model
  */
 class TagPeer extends BaseTagPeer {
-    public static function getByText($text, User $user) {
-        $t = new Tag();
-        $t->setTag($text);
-        $t->setUser($user);
-
-        $c = $t->buildCriteria();
-        if ($etag = self::doSelectOne($c)) {
-            return $etag;
-        } else {
-            $t->save();
-            return $t;
-        }
-    }
 } // TagPeer

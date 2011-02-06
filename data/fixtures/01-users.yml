@@ -1,17 +1,12 @@
+Tag:
+<?php for ($i = 1; $i <= 8; $i++): ?>
+  Tag_<?php echo $i; ?>:
+    tag: <?php echoln(uniqid()); ?>
+    number: <?php echoln($i); ?>
+<?php endfor; ?>
 User:
-  User_1:
-    name: 'Graham Christensen'
-  User_2:
-    name: 'Justin Lewis'
-  User_3:
-    name: 'Thomas Christ'
-  User_4:
-    name: 'Aharon Wasserman'
-  User_5:
-    name: 'Travis Black'
-  User_6:
-    name: 'Esley Svanas'
-  User_7:
-    name: Gabe
-  User_8:
-    name: 'John Bis'
+<?php for ($i = 1; $i <= 8; $i++): ?>
+  User_<?php echo $i; ?>:
+    tag_id: Tag_<?php echoln($i); ?>
+    name: 'User <?php echo $i; ?>'
+<?php endfor; ?>

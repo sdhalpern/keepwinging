@@ -14,7 +14,15 @@ CREATE TABLE `user`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255)  NOT NULL,
-	PRIMARY KEY (`id`)
+	`tag_id` INTEGER(11)  NOT NULL,
+	`created_at` DATETIME,
+	PRIMARY KEY (`id`),
+	INDEX `user_FI_1` (`tag_id`),
+	CONSTRAINT `user_FK_1`
+		FOREIGN KEY (`tag_id`)
+		REFERENCES `tag` (`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
 )Engine=InnoDB;
 
 #-----------------------------------------------------------------------------
@@ -40,6 +48,22 @@ CREATE TABLE `wing`
 )Engine=InnoDB;
 
 #-----------------------------------------------------------------------------
+#-- tag
+#-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `tag`;
+
+
+CREATE TABLE `tag`
+(
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`tag` VARCHAR(255)  NOT NULL,
+	`number` INTEGER(11)  NOT NULL,
+	`created_at` DATETIME,
+	PRIMARY KEY (`id`)
+)Engine=InnoDB;
+
+#-----------------------------------------------------------------------------
 #-- scan_log
 #-----------------------------------------------------------------------------
 
@@ -57,28 +81,6 @@ CREATE TABLE `scan_log`
 	CONSTRAINT `scan_log_FK_1`
 		FOREIGN KEY (`tag_id`)
 		REFERENCES `tag` (`id`)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
-)Engine=InnoDB;
-
-#-----------------------------------------------------------------------------
-#-- tag
-#-----------------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `tag`;
-
-
-CREATE TABLE `tag`
-(
-	`id` INTEGER  NOT NULL AUTO_INCREMENT,
-	`tag` VARCHAR(255)  NOT NULL,
-	`user_id` INTEGER(11)  NOT NULL,
-	`created_at` DATETIME,
-	PRIMARY KEY (`id`),
-	INDEX `tag_FI_1` (`user_id`),
-	CONSTRAINT `tag_FK_1`
-		FOREIGN KEY (`user_id`)
-		REFERENCES `user` (`id`)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 )Engine=InnoDB;
