@@ -3,5 +3,5 @@ User:
   User_<?php echo $i; ?>:
     name: 'User <?php echo $i; ?>'
     rfid_tag: Tag_<?php echoln($i); ?>
-    picture: 
+    picture: 'justin.jpg'
 <?php endfor; ?>
