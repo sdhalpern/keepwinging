@@ -30,6 +30,9 @@ EOF;
 
         $tag = $arguments['tag'];
 
+        var_dump($tag);
+        
+
         echo "Handling $tag\r\n";
 
 

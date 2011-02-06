@@ -19,6 +19,7 @@
         </style>
  **/
 ?>
+  <meta http-equiv="refresh" content="10">
     </head>
     <body>
         <div class="twitter_stream_container">
