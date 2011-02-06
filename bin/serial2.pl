@@ -31,10 +31,13 @@ my $start = time;
 my $last_tag = undef;
 
 while (1) {
-    my $buf = $RFID->lookfor(12);
+    my $buf = "";
 
-    unless (defined $buf) {
-        die "Aborted without match\n";
+    until ($buf ne "") {
+        $buf = $RFID->lookfor;
+
+	die "Aborted without match\n" unless defined $buf;
+        usleep 500_000;
     }
 
     print "Found ", $buf, " [", length $buf, "]\n";
