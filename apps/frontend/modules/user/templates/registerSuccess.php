@@ -1,4 +1,4 @@
-<form action="<?php echo url_for('@user_register?key=' . $user->getObject()->getRfidTag()); ?>" method="post">
+<form action="<?php echo url_for('@user_register?key=' . $user->getObject()->getRfidTag()); ?>" enctype="multipart/form-data" method="post">
     <table>
         <?php echo $user; ?>
 

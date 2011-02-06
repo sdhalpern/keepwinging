@@ -7,10 +7,10 @@ class userActions extends sfActions {
 
         $user = new UserForm($user);
 
-
         if ($request->getMethod() == 'POST') {
+
             $user->bind($request->getParameter($user->getName()),
-                        $request->getFiles());
+                        $request->getFiles($user->getName()));
 
             if ($user->isValid()) {
                 $user->save();
