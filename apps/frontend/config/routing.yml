@@ -10,7 +10,7 @@ dashboard:
   url: /dashboard
   param: { module: default, action: dashboard }
 
-dashboard:
+feed:
   url: /feed
   param: { module: default, action: feed }
 
