@@ -17,7 +17,6 @@ $perWing = 220 / $max;
             <div class="leader_data">
                 <div class="leader_text">
                 <?php echo $user; ?><br />
-                <?php echo $user->getTeam(); ?><br />
                 <div class="leader_progress"
                      style="width:<?php echo $user->getWingConsumption() * $perWing; ?>px">
                     <?php echo $user->getWingConsumption(); ?> Wings</div>
