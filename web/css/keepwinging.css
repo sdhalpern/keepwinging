@@ -26,7 +26,8 @@ a img{
 .twitter_stream_container{
     width: 100%;
     margin-bottom: 25px;
-    background-color: #0099ff;
+    background-color: white;
+    border-bottom: 6px solid #EEE;
     text-align: center;
     margin-left: 0;
     margin-right: 0;
@@ -35,7 +36,7 @@ a img{
 }
 
 .twitter_stream_logo{
-    background-color: #0099ff;
+    background-color: WHITE;
     float: left;
     height: 70px;
     width: 150px;

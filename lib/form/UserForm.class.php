@@ -25,5 +25,4 @@ class UserForm extends BaseUserForm {
                         )
         ));
     }
-
 }

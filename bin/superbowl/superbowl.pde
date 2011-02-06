@@ -134,7 +134,7 @@ void writeTag(char *mycode) {
 void printTag(char *code) {
     readingTag();
     Serial.print(":");
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
       Serial.print(code[i]);
     }
     Serial.println(";");

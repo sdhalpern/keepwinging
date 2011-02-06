@@ -25,10 +25,9 @@
             <div class="container">
                 <div class="twitter_stream_logo">
                     <a href="http://keepwinging.com">
-                        <img src="/images/logo_small.png" alt="KeepWinging" height="60" width="130" />
+                        <img src="http://nationalfield.org/keepwinging/headerLogoAll.png" />
                     </a>
                 </div>
-                <?php include_component('twitter', 'stream'); ?>
             </div>
         </div>
 
