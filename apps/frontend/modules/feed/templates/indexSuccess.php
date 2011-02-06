@@ -1,1 +1,1 @@
-<?php include_component('feed', 'items'); ?>
+<?php include_component('feed', 'items', array('since' => $since)); ?>

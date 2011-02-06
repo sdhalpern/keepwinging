@@ -17,10 +17,14 @@
  * @package    lib.model
  */
 class FeedPeer extends BaseFeedPeer {
-    public static function getLatest() {
+    public static function getLatest($since = false) {
         $c = new Criteria();
         $c->addDescendingOrderByColumn(self::CREATED_AT);
         $c->setLimit(10);
+
+        if ($since) {
+            $c->add(self::CREATED_AT, $since, Criteria::GREATER_EQUAL);
+        }
 
         return self::doSelect($c);
     }

@@ -14,7 +14,7 @@ default:
 
   stylesheets:    [keepwinging.css]
 
-  javascripts:    ['https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js']
+  javascripts:    ['https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js', 'jquery.timeago.js']
 
   has_layout:     true
   layout:         layout
