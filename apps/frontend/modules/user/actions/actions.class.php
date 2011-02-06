@@ -3,7 +3,9 @@
 class userActions extends sfActions {
     public function executeRegister(sfWebRequest $request) {
         $user = new UserForm();
+
         $tag = new TagForm();
+        $tag->getObject()->setTag($request->getParameter('key'));
 
         if ($request->getMethod() == 'POST') {
             $user->bind($request->getParameter($user->getName()));

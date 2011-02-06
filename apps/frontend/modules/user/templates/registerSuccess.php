@@ -1,4 +1,4 @@
-<form action="<?php echo url_for('@user_register'); ?>" method="post">
+<form action="<?php echo url_for('@user_register?key=' . $tag->getObject()->getTag()); ?>" method="post">
     <table>
         <?php echo $user; ?>
         <?php echo $tag; ?>

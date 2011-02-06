@@ -34,5 +34,5 @@ api_report:
     sf_method: post
 
 user_register:
-  url: /register
+  url: /register/:key
   param: { module: user, action: register }
