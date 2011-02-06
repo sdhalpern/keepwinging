@@ -103,9 +103,15 @@ class WingPeer extends BaseWingPeer {
     public static function getRate() {
         $sql = 'SELECT SUM(wing.number) AS total
                 FROM wing
-                WHERE wing.created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)';
+                WHERE wing.created_at >= :time';
         $con = Propel::getConnection();
         $stmt = $con->prepare($sql);
+        
+        $time = date('Y-m-d G:i:s', strtotime('1 hour ago'));
+        
+        var_dump($time);
+
+        $stmt->bindValue(':time', $time);
         $r = $stmt->execute();
 
         if (!$r) {
