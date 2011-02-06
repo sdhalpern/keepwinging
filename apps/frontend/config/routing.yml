@@ -12,7 +12,7 @@ dashboard:
 
 feed:
   url: /feed
-  param: { module: default, action: feed }
+  param: { module: feed, action: index }
 
 api_count:
   url: /api/count.json
