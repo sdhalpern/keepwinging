@@ -26,5 +26,7 @@ class defaultActions extends sfActions
 
   public function executeFeed(sfWebRequest $request) {
       $this->feed = FeedPeer::getLatest();
+
+      $this->setLayout('feed'); 
   }
 }
