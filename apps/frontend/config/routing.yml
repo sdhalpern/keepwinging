@@ -6,11 +6,25 @@ homepage:
   url:   /
   param: { module: default, action: index }
 
-data_count:
+dashboard:
+  url: /dashboard
+  param: { module: default, action: dashboard }
+
+api_count:
   url: /api/count.json
-  param: { action: count, module: data }
+  param: { module: data, action: count }
   requirements:
     sf_format: json
+
+api_rate:
+  url: /api/rate.json
+  param: { module: data, action: rate }
+  requirements:
+    sf_format: json
+
+api_burnup:
+  url: /api/burnup
+  param: { module: chart, action: burnup }
 
 api_report:
   url: /api/report
@@ -18,14 +32,3 @@ api_report:
   requirements:
     key: kyle
     sf_method: post
-
-
-
-# generic rules
-# please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
-
-default:
-  url:   /:module/:action/*
