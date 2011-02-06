@@ -61,6 +61,7 @@ EOF;
 
         $x = @json_decode($x);
         if (!$x) {
+          var_dump($x);
             $this->fatal('Comunication error.');
         }
 
