@@ -10,7 +10,3 @@ function updateDataFeed() {
     }, 'html');
 }
 $(document).ready(function() { updateDataFeed(); });
-
-jQuery(document).ready(function() {
-  jQuery(".timeago").timeago();
-});
