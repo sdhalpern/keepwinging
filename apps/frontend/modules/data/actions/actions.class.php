@@ -13,14 +13,7 @@ class dataActions extends sfActions {
     public function executeRate(sfWebRequest $request) {
         $current = WingPeer::getRate();
 
-        $endtime = (strtotime('2011-02-06 22:00') - time()) / 60 / 60;
-
-
-        if ($endtime < 1) {
-            $endtime = 1;
-        }
-
-        $remaining = WingPeer::getRemaining() / $endtime;
+        $remaining = WingPeer::getNecessaryRate();
 
         $d = array('current' => $current, 'need' => $remaining);
 

@@ -110,6 +110,17 @@ class WingPeer extends BaseWingPeer {
         return (int)$stmt->fetchColumn(0);
     }
 
+    public static function getNecessaryRate() {
+        $endtime = (strtotime('2011-02-06 22:00') - time()) / 60 / 60;
+
+
+        if ($endtime < 1) {
+            $endtime = 1;
+        }
+
+        return ceil(WingPeer::getRemaining() / $endtime);
+    }
+
     public static function getBurnup() {
         $sum = 0;
 
