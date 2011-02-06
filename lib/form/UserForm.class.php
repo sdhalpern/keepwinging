@@ -10,7 +10,7 @@
 class UserForm extends BaseUserForm {
 
     public function configure() {
-        $this->useFields(array('name', 'rfid_tag', 'picture'));
+        $this->useFields(array('name', 'rfid_tag', 'team_id', 'picture'));
 
         $this->setWidget('rfid_tag', new sfWidgetFormInputHidden());
 

@@ -3,6 +3,7 @@
 use warnings;
 use strict;
 
+use FindBin '$Bin';
 use Device::SerialPort;
 use Time::HiRes 'usleep';
 
