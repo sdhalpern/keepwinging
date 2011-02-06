@@ -3,6 +3,7 @@
 
 int  val = 0; 
 char code[10]; 
+char secondcode[10]; 
 int bytesread = 0; 
 
 #define rxPin 2
@@ -12,48 +13,70 @@ int bytesread = 0;
 #define LED_READ 8
 
 
-void setup()
-{ 
-  Serial.begin(2400);  // Hardware serial for Monitor 2400bps
+void setup() { 
+    Serial.begin(2400);  // Hardware serial for Monitor 2400bps
   
-  pinMode(LED_WAITING, OUTPUT);
-  pinMode(LED_READ, OUTPUT);
+    pinMode(LED_WAITING, OUTPUT);
+    pinMode(LED_READ, OUTPUT);
 }
 
 
-void loop()
-{ 
-  // Set indicator LEDs
-  waitingForTag();
+void loop() {
+    // Set indicator LEDs
+    waitingForTag();
   
-  // Read in some RFID Action
-  SoftwareSerial RFID = SoftwareSerial(rxPin,txPin); 
-  RFID.begin(2400);
+    // Read in some RFID Action
+    SoftwareSerial RFID = SoftwareSerial(rxPin,txPin); 
+    RFID.begin(2400);
+    
+    // check for header 
+    if ((val = RFID.read()) == 10) {
+        bytesread = 0; 
+        while(bytesread<10) {  // read 10 digit code 
+            val = RFID.read(); 
+        
+            // if header or stop bytes before the 10 digit reading 
+            if ((val == 10) || (val == 13)) {   
+                break; // stop reading 
+            }
+        
+            code[bytesread] = val;         // add the digit           
+            bytesread++;                   // ready to read next digit  
+        } 
 
-  if((val = RFID.read()) == 10)
-  {   // check for header 
-    bytesread = 0; 
-    while(bytesread<10)
-    {  // read 10 digit code 
-      val = RFID.read(); 
-      if((val == 10)||(val == 13))
-      {  // if header or stop bytes before the 10 digit reading 
-        break;                       // stop reading 
-      } 
-      code[bytesread] = val;         // add the digit           
-      bytesread++;                   // ready to read next digit  
-    } 
+        // if 10 digit read is complete 
+        if(bytesread == 10) {
+            // Read again
+            if ((val = RFID.read()) == 10) {
+                bytesread = 0; 
+                while(bytesread<10) {  // read 10 digit code 
+                    val = RFID.read(); 
 
-    if(bytesread == 10)
-    {  // if 10 digit read is complete 
-      readingTag();
-      writeTag(code);
+                    // if header or stop bytes before the 10 digit reading 
+                    if ((val == 10) || (val == 13)) {   
+                        break; // stop reading 
+                    }
+
+                    secondcode[bytesread] = val;         // add the digit           
+                    bytesread++;                   // ready to read next digit  
+                } 
+
+                // if 10 digit read is complete 
+                if(bytesread == 10 && secondcode == code) {
+                    readingTag();
+                    writeTag(code);
+                }
+
+                bytesread = 0; 
+            }
+            readingTag();
+            writeTag(code);
+        }
+    
+        bytesread = 0; 
+        delay(500);                       // wait for a second
     }
-    bytesread = 0; 
-    delay(500);                       // wait for a second
-  } 
-} 
-
+}
 
 void waitingForTag() {
   digitalWrite(LED_WAITING, LOW);
