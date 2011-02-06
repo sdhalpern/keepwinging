@@ -1,0 +1,4 @@
+all:
+  metas:
+    title: "Keep Winging, NationalField 2011 Superbowl Challenge"
+  javascripts:    [/js/feed.js]
