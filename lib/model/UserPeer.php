@@ -24,7 +24,7 @@ class UserPeer extends BaseUserPeer {
         self::addSelectColumns($c);
         $c->addAsColumn('total', 'SUM(' . WingPeer::NUMBER . ')');
         $c->addGroupByColumn(UserPeer::ID);
-		$c->setLimit(7);
+		$c->setLimit(9);
 		
 		return self::doSelect($c);
 	}
