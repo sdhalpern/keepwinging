@@ -1,7 +1,7 @@
 function updateDataLeaderboard() {
     $.get('/api/leaderboard', function(data) {
         $('#leaderboard').replaceWith(data);
-        setTimeout('updateDataLeaderboard();', 10000);
+        setTimeout('updateDataLeaderboard();', 60000);
     });
 }
 
