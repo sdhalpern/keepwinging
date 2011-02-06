@@ -163,3 +163,38 @@ a img{
     margin-top:50px;
     padding-top: 10px;
 }
+
+
+.feedRow{
+	margin:auto;
+	margin-top:20px;
+	width:95%;
+	background-color:#fff;
+	min-height:100px;
+}
+.profPic{
+	height:100px;
+	width:100px;
+	background-color:#FF0000;
+	float:left;
+}
+.textBar{
+	float:left;
+	width:90%;
+	background-color:#0099FF;
+	color:#FFFFFF;
+	min-height:30px;
+}
+.barPointer{
+	background-color:#FFFFFF;
+	float:left;
+}
+.contentText{
+	text-align:left;
+	padding:5px;
+	margin-left:80px;
+	padding-right:20px;
+}
+.fatty{
+	color:#EEE;
+}
