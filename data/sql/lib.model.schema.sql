@@ -16,6 +16,28 @@ CREATE TABLE `user`
 	`name` VARCHAR(255)  NOT NULL,
 	`picture` VARCHAR(255)  NOT NULL,
 	`rfid_tag` VARCHAR(255)  NOT NULL,
+	`team_id` INTEGER(11)  NOT NULL,
+	`created_at` DATETIME,
+	PRIMARY KEY (`id`),
+	INDEX `user_FI_1` (`team_id`),
+	CONSTRAINT `user_FK_1`
+		FOREIGN KEY (`team_id`)
+		REFERENCES `team` (`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+)Engine=InnoDB;
+
+#-----------------------------------------------------------------------------
+#-- team
+#-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `team`;
+
+
+CREATE TABLE `team`
+(
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255)  NOT NULL,
 	`created_at` DATETIME,
 	PRIMARY KEY (`id`)
 )Engine=InnoDB;

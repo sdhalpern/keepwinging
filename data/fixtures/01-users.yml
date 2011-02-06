@@ -1,9 +1,31 @@
+Team:
+<?php
+$teams = array(
+    'Beat the Meat',
+    'Bruce Wingsteen and the E Street Band',
+    'Lord of the Wings',
+    'On a Wing and a Beer',
+    'Sean Wingston',
+    'The Big Wingowski',
+    'Wing-A-Lings',
+    'Winger Winger Chicken Dinner',
+    'Winging the Future',
+    'Wingle Fever',
+    'no team'
+    );
+
+ foreach ($teams as $i => $t): ?>
+  Team_<?php echo $i; ?>:
+    name: '<?php echo $t; ?>'
+<?php endforeach; ?>
+
 User:
 <?php for ($i = 1; $i <= 8; $i++): ?>
   User_<?php echo $i; ?>:
     name: 'User <?php echo $i; ?>'
     rfid_tag: Tag_<?php echoln($i); ?>
     picture: 'justin.jpg'
+    team_id: Team_10
 <?php endfor; ?>
 
 Feed:

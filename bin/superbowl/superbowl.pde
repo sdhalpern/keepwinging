@@ -26,7 +26,6 @@ void loop() {
     // Set indicator LEDs
     waitingForTag();
   
-<<<<<<< HEAD
     // Read in some RFID Action
     SoftwareSerial RFID = SoftwareSerial(rxPin,txPin); 
     RFID.begin(2400);
@@ -48,57 +47,6 @@ void loop() {
 
         // if 10 digit read is complete 
         if(bytesread == 10) {
-            // Read again
-            if ((val = RFID.read()) == 10) {
-                bytesread = 0; 
-                while(bytesread<10) {  // read 10 digit code 
-                    val = RFID.read(); 
-
-                    // if header or stop bytes before the 10 digit reading 
-                    if ((val == 10) || (val == 13)) {   
-                        break; // stop reading 
-                    }
-
-                    secondcode[bytesread] = val;         // add the digit           
-                    bytesread++;                   // ready to read next digit  
-                } 
-=======
-  // Read in some RFID Action
-  SoftwareSerial RFID = SoftwareSerial(rxPin,txPin); 
-  RFID.begin(2400);
-
-  if((val = RFID.read()) == 10)
-  {   // check for header 
-    bytesread = 0; 
-    while(bytesread<10)
-    {  // read 10 digit code 
-      val = RFID.read(); 
-      if((val == 10)||(val == 13))
-      {  // if header or stop bytes before the 10 digit reading 
-        break;                       // stop reading 
-      } 
-      code[bytesread] = val;         // add the digit           
-      bytesread++;                   // ready to read next digit  
-    } 
-
-    if(bytesread == 10)
-    {  // if 10 digit read is complete 
-      writeTag(code);
-    }
-    bytesread = 0; 
-    delay(250);                       // wait for a second
-  } 
-} 
->>>>>>> Making sure that a tag can be read twice before printing it to the serial port.
-
-                // if 10 digit read is complete 
-                if(bytesread == 10 && secondcode == code) {
-                    readingTag();
-                    writeTag(code);
-                }
-
-                bytesread = 0; 
-            }
             readingTag();
             writeTag(code);
         }
@@ -137,5 +85,6 @@ void printTag(char *code) {
     for (int i = 0; i < 11; i++) {
       Serial.print(code[i]);
     }
-    Serial.println(";");
+    Serial.println(" ");
 }
+

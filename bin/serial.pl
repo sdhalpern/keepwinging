@@ -7,7 +7,7 @@ use Device::SerialPort;
 use Time::HiRes;
 
 
-my $DEBUG=0;
+my $DEBUG=1;
 my $DELAY=30; #secs
 my $READ_DELAY=125000; #microsecs
 

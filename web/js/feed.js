@@ -7,6 +7,7 @@ function updateDataFeed() {
 
         $('#feed_replace').replaceWith(data);
         setTimeout('updateDataFeed();', 1000);
+        //jQuery(".timeago").timeago();
     }, 'html');
 }
 $(document).ready(function() { updateDataFeed(); });

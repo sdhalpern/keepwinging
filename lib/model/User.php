@@ -18,7 +18,7 @@
  */
 class User extends BaseUser {
     public function __toString() {
-        return $this->getName();
+        return $this->getName() . ' (' . $this->getTeam() . ')';
     }
 
     public function getWingConsumption() {

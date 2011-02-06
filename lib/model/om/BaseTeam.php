@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base class that represents a row from the 'wing' table.
+ * Base class that represents a row from the 'team' table.
  *
  * 
  *
@@ -11,14 +11,14 @@
  *
  * @package    lib.model.om
  */
-abstract class BaseWing extends BaseObject  implements Persistent {
+abstract class BaseTeam extends BaseObject  implements Persistent {
 
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        WingPeer
+	 * @var        TeamPeer
 	 */
 	protected static $peer;
 
@@ -29,16 +29,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	protected $id;
 
 	/**
-	 * The value for the user_id field.
-	 * @var        int
+	 * The value for the name field.
+	 * @var        string
 	 */
-	protected $user_id;
-
-	/**
-	 * The value for the number field.
-	 * @var        int
-	 */
-	protected $number;
+	protected $name;
 
 	/**
 	 * The value for the created_at field.
@@ -47,9 +41,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	protected $created_at;
 
 	/**
-	 * @var        User
+	 * @var        array User[] Collection to store aggregation of User objects.
 	 */
-	protected $aUser;
+	protected $collUsers;
+
+	/**
+	 * @var        Criteria The criteria used to select the current contents of collUsers.
+	 */
+	private $lastUserCriteria = null;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -67,7 +66,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 	// symfony behavior
 	
-	const PEER = 'WingPeer';
+	const PEER = 'TeamPeer';
 
 	/**
 	 * Get the [id] column value.
@@ -80,23 +79,13 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	}
 
 	/**
-	 * Get the [user_id] column value.
+	 * Get the [name] column value.
 	 * 
-	 * @return     int
+	 * @return     string
 	 */
-	public function getUserId()
+	public function getName()
 	{
-		return $this->user_id;
-	}
-
-	/**
-	 * Get the [number] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getNumber()
-	{
-		return $this->number;
+		return $this->name;
 	}
 
 	/**
@@ -141,7 +130,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Team The current object (for fluent API support)
 	 */
 	public function setId($v)
 	{
@@ -151,62 +140,38 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = WingPeer::ID;
+			$this->modifiedColumns[] = TeamPeer::ID;
 		}
 
 		return $this;
 	} // setId()
 
 	/**
-	 * Set the value of [user_id] column.
+	 * Set the value of [name] column.
 	 * 
-	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
+	 * @param      string $v new value
+	 * @return     Team The current object (for fluent API support)
 	 */
-	public function setUserId($v)
+	public function setName($v)
 	{
 		if ($v !== null) {
-			$v = (int) $v;
+			$v = (string) $v;
 		}
 
-		if ($this->user_id !== $v) {
-			$this->user_id = $v;
-			$this->modifiedColumns[] = WingPeer::USER_ID;
-		}
-
-		if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-			$this->aUser = null;
+		if ($this->name !== $v) {
+			$this->name = $v;
+			$this->modifiedColumns[] = TeamPeer::NAME;
 		}
 
 		return $this;
-	} // setUserId()
-
-	/**
-	 * Set the value of [number] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     Wing The current object (for fluent API support)
-	 */
-	public function setNumber($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->number !== $v) {
-			$this->number = $v;
-			$this->modifiedColumns[] = WingPeer::NUMBER;
-		}
-
-		return $this;
-	} // setNumber()
+	} // setName()
 
 	/**
 	 * Sets the value of [created_at] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     Wing The current object (for fluent API support)
+	 * @return     Team The current object (for fluent API support)
 	 */
 	public function setCreatedAt($v)
 	{
@@ -243,7 +208,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 					)
 			{
 				$this->created_at = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = WingPeer::CREATED_AT;
+				$this->modifiedColumns[] = TeamPeer::CREATED_AT;
 			}
 		} // if either are not null
 
@@ -283,9 +248,8 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-			$this->number = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-			$this->created_at = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->created_at = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -295,10 +259,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 			// FIXME - using NUM_COLUMNS may be clearer.
-			return $startcol + 4; // 4 = WingPeer::NUM_COLUMNS - WingPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 3; // 3 = TeamPeer::NUM_COLUMNS - TeamPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating Wing object", $e);
+			throw new PropelException("Error populating Team object", $e);
 		}
 	}
 
@@ -318,9 +282,6 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	public function ensureConsistency()
 	{
 
-		if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
-			$this->aUser = null;
-		}
 	} // ensureConsistency
 
 	/**
@@ -344,13 +305,13 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(TeamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = WingPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = TeamPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -360,7 +321,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aUser = null;
+			$this->collUsers = null;
+			$this->lastUserCriteria = null;
+
 		} // if (deep)
 	}
 
@@ -380,14 +343,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(TeamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseWing:delete:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseTeam:delete:pre') as $callable)
 			{
 			  if (call_user_func($callable, $this, $con))
 			  {
@@ -398,10 +361,10 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			}
 
 			if ($ret) {
-				WingPeer::doDelete($this, $con);
+				TeamPeer::doDelete($this, $con);
 				$this->postDelete($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseWing:delete:post') as $callable)
+				foreach (sfMixer::getCallables('BaseTeam:delete:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con);
 				}
@@ -437,7 +400,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(WingPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(TeamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
@@ -445,7 +408,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		try {
 			$ret = $this->preSave($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseWing:save:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseTeam:save:pre') as $callable)
 			{
 			  if (is_integer($affectedRows = call_user_func($callable, $this, $con)))
 			  {
@@ -460,7 +423,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			if ($isInsert) {
 				$ret = $ret && $this->preInsert($con);
 				// symfony_timestampable behavior
-				if (!$this->isColumnModified(WingPeer::CREATED_AT))
+				if (!$this->isColumnModified(TeamPeer::CREATED_AT))
 				{
 				  $this->setCreatedAt(time());
 				}
@@ -477,12 +440,12 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				}
 				$this->postSave($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseWing:save:post') as $callable)
+				foreach (sfMixer::getCallables('BaseTeam:save:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con, $affectedRows);
 				}
 
-				WingPeer::addInstanceToPool($this);
+				TeamPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -511,26 +474,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
-			// We call the save method on the following object(s) if they
-			// were passed to this object by their coresponding set
-			// method.  This object relates to these object(s) by a
-			// foreign key reference.
-
-			if ($this->aUser !== null) {
-				if ($this->aUser->isModified() || $this->aUser->isNew()) {
-					$affectedRows += $this->aUser->save($con);
-				}
-				$this->setUser($this->aUser);
-			}
-
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = WingPeer::ID;
+				$this->modifiedColumns[] = TeamPeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
-					$pk = WingPeer::doInsert($this, $con);
+					$pk = TeamPeer::doInsert($this, $con);
 					$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which
 										 // should always be true here (even though technically
 										 // BasePeer::doInsert() can insert multiple rows).
@@ -539,10 +490,18 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 
 					$this->setNew(false);
 				} else {
-					$affectedRows += WingPeer::doUpdate($this, $con);
+					$affectedRows += TeamPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
+			}
+
+			if ($this->collUsers !== null) {
+				foreach ($this->collUsers as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
 			}
 
 			$this->alreadyInSave = false;
@@ -611,22 +570,18 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 			$failureMap = array();
 
 
-			// We call the validate method on the following object(s) if they
-			// were passed to this object by their coresponding set
-			// method.  This object relates to these object(s) by a
-			// foreign key reference.
-
-			if ($this->aUser !== null) {
-				if (!$this->aUser->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
-				}
-			}
-
-
-			if (($retval = WingPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = TeamPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collUsers !== null) {
+					foreach ($this->collUsers as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -646,7 +601,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = WingPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = TeamPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -665,12 +620,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getUserId();
+				return $this->getName();
 				break;
 			case 2:
-				return $this->getNumber();
-				break;
-			case 3:
 				return $this->getCreatedAt();
 				break;
 			default:
@@ -692,12 +644,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = WingPeer::getFieldNames($keyType);
+		$keys = TeamPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getUserId(),
-			$keys[2] => $this->getNumber(),
-			$keys[3] => $this->getCreatedAt(),
+			$keys[1] => $this->getName(),
+			$keys[2] => $this->getCreatedAt(),
 		);
 		return $result;
 	}
@@ -714,7 +665,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = WingPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = TeamPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -733,12 +684,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setUserId($value);
+				$this->setName($value);
 				break;
 			case 2:
-				$this->setNumber($value);
-				break;
-			case 3:
 				$this->setCreatedAt($value);
 				break;
 		} // switch()
@@ -763,12 +711,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = WingPeer::getFieldNames($keyType);
+		$keys = TeamPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setNumber($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
+		if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setCreatedAt($arr[$keys[2]]);
 	}
 
 	/**
@@ -778,12 +725,11 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(WingPeer::DATABASE_NAME);
+		$criteria = new Criteria(TeamPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(WingPeer::ID)) $criteria->add(WingPeer::ID, $this->id);
-		if ($this->isColumnModified(WingPeer::USER_ID)) $criteria->add(WingPeer::USER_ID, $this->user_id);
-		if ($this->isColumnModified(WingPeer::NUMBER)) $criteria->add(WingPeer::NUMBER, $this->number);
-		if ($this->isColumnModified(WingPeer::CREATED_AT)) $criteria->add(WingPeer::CREATED_AT, $this->created_at);
+		if ($this->isColumnModified(TeamPeer::ID)) $criteria->add(TeamPeer::ID, $this->id);
+		if ($this->isColumnModified(TeamPeer::NAME)) $criteria->add(TeamPeer::NAME, $this->name);
+		if ($this->isColumnModified(TeamPeer::CREATED_AT)) $criteria->add(TeamPeer::CREATED_AT, $this->created_at);
 
 		return $criteria;
 	}
@@ -798,9 +744,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(WingPeer::DATABASE_NAME);
+		$criteria = new Criteria(TeamPeer::DATABASE_NAME);
 
-		$criteria->add(WingPeer::ID, $this->id);
+		$criteria->add(TeamPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -831,18 +777,30 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of Wing (or compatible) type.
+	 * @param      object $copyObj An object of Team (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 
-		$copyObj->setUserId($this->user_id);
-
-		$copyObj->setNumber($this->number);
+		$copyObj->setName($this->name);
 
 		$copyObj->setCreatedAt($this->created_at);
+
+
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getUsers() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addUser($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
 
 
 		$copyObj->setNew(true);
@@ -860,7 +818,7 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     Wing Clone of current object.
+	 * @return     Team Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -879,63 +837,168 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     WingPeer
+	 * @return     TeamPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new WingPeer();
+			self::$peer = new TeamPeer();
 		}
 		return self::$peer;
 	}
 
 	/**
-	 * Declares an association between this object and a User object.
+	 * Clears out the collUsers collection (array).
 	 *
-	 * @param      User $v
-	 * @return     Wing The current object (for fluent API support)
-	 * @throws     PropelException
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addUsers()
 	 */
-	public function setUser(User $v = null)
+	public function clearUsers()
 	{
-		if ($v === null) {
-			$this->setUserId(NULL);
-		} else {
-			$this->setUserId($v->getId());
-		}
-
-		$this->aUser = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the User object, it will not be re-added.
-		if ($v !== null) {
-			$v->addWing($this);
-		}
-
-		return $this;
+		$this->collUsers = null; // important to set this to NULL since that means it is uninitialized
 	}
 
+	/**
+	 * Initializes the collUsers collection (array).
+	 *
+	 * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initUsers()
+	{
+		$this->collUsers = array();
+	}
 
 	/**
-	 * Get the associated User object
+	 * Gets an array of User objects which contain a foreign key that references this object.
 	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     User The associated User object.
+	 * If this collection has already been initialized with an identical Criteria, it returns the collection.
+	 * Otherwise if this Team has previously been saved, it will retrieve
+	 * related Users from storage. If this Team is new, it will return
+	 * an empty collection or the current collection, the criteria is ignored on a new object.
+	 *
+	 * @param      PropelPDO $con
+	 * @param      Criteria $criteria
+	 * @return     array User[]
 	 * @throws     PropelException
 	 */
-	public function getUser(PropelPDO $con = null)
+	public function getUsers($criteria = null, PropelPDO $con = null)
 	{
-		if ($this->aUser === null && ($this->user_id !== null)) {
-			$this->aUser = UserPeer::retrieveByPk($this->user_id);
-			/* The following can be used additionally to
-			   guarantee the related object contains a reference
-			   to this object.  This level of coupling may, however, be
-			   undesirable since it could result in an only partially populated collection
-			   in the referenced object.
-			   $this->aUser->addWings($this);
-			 */
+		if ($criteria === null) {
+			$criteria = new Criteria(TeamPeer::DATABASE_NAME);
 		}
-		return $this->aUser;
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collUsers === null) {
+			if ($this->isNew()) {
+			   $this->collUsers = array();
+			} else {
+
+				$criteria->add(UserPeer::TEAM_ID, $this->id);
+
+				UserPeer::addSelectColumns($criteria);
+				$this->collUsers = UserPeer::doSelect($criteria, $con);
+			}
+		} else {
+			// criteria has no effect for a new object
+			if (!$this->isNew()) {
+				// the following code is to determine if a new query is
+				// called for.  If the criteria is the same as the last
+				// one, just return the collection.
+
+
+				$criteria->add(UserPeer::TEAM_ID, $this->id);
+
+				UserPeer::addSelectColumns($criteria);
+				if (!isset($this->lastUserCriteria) || !$this->lastUserCriteria->equals($criteria)) {
+					$this->collUsers = UserPeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastUserCriteria = $criteria;
+		return $this->collUsers;
+	}
+
+	/**
+	 * Returns the number of related User objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related User objects.
+	 * @throws     PropelException
+	 */
+	public function countUsers(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if ($criteria === null) {
+			$criteria = new Criteria(TeamPeer::DATABASE_NAME);
+		} else {
+			$criteria = clone $criteria;
+		}
+
+		if ($distinct) {
+			$criteria->setDistinct();
+		}
+
+		$count = null;
+
+		if ($this->collUsers === null) {
+			if ($this->isNew()) {
+				$count = 0;
+			} else {
+
+				$criteria->add(UserPeer::TEAM_ID, $this->id);
+
+				$count = UserPeer::doCount($criteria, false, $con);
+			}
+		} else {
+			// criteria has no effect for a new object
+			if (!$this->isNew()) {
+				// the following code is to determine if a new query is
+				// called for.  If the criteria is the same as the last
+				// one, just return count of the collection.
+
+
+				$criteria->add(UserPeer::TEAM_ID, $this->id);
+
+				if (!isset($this->lastUserCriteria) || !$this->lastUserCriteria->equals($criteria)) {
+					$count = UserPeer::doCount($criteria, false, $con);
+				} else {
+					$count = count($this->collUsers);
+				}
+			} else {
+				$count = count($this->collUsers);
+			}
+		}
+		return $count;
+	}
+
+	/**
+	 * Method called to associate a User object to this object
+	 * through the User foreign key attribute.
+	 *
+	 * @param      User $l User
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addUser(User $l)
+	{
+		if ($this->collUsers === null) {
+			$this->initUsers();
+		}
+		if (!in_array($l, $this->collUsers, true)) { // only add it if the **same** object is not already associated
+			array_push($this->collUsers, $l);
+			$l->setTeam($this);
+		}
 	}
 
 	/**
@@ -950,9 +1013,14 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collUsers) {
+				foreach ((array) $this->collUsers as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
-			$this->aUser = null;
+		$this->collUsers = null;
 	}
 
 	// symfony_behaviors behavior
@@ -962,9 +1030,9 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	 */
 	public function __call($method, $arguments)
 	{
-	  if (!$callable = sfMixer::getCallable('BaseWing:'.$method))
+	  if (!$callable = sfMixer::getCallable('BaseTeam:'.$method))
 	  {
-	    throw new sfException(sprintf('Call to undefined method BaseWing::%s', $method));
+	    throw new sfException(sprintf('Call to undefined method BaseTeam::%s', $method));
 	  }
 	
 	  array_unshift($arguments, $this);
@@ -972,4 +1040,4 @@ abstract class BaseWing extends BaseObject  implements Persistent {
 	  return call_user_func_array($callable, $arguments);
 	}
 
-} // BaseWing
+} // BaseTeam

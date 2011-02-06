@@ -15,8 +15,23 @@ propel:
       size: 255
       required: true
       unique: true
+    team_id:
+      type: integer
+      size: 11
+      required: true
+      foreignTable: team
+      foreignReference: id
+      onDelete: cascade
+      onUpdate: cascade
     created_at: ~
-    
+  team:
+    id: ~
+    name:
+      type: varchar
+      size: 255
+      required: true
+      unique: true
+    created_at: ~
   wing:
     id: ~
     user_id:
