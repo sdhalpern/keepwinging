@@ -10,7 +10,7 @@ $max = max($consumption);
 $perWing = 220 / $max;
 
 ?>
-<div class="dash_right">
+<div class="dash_right" id="leaderboard">
     <?php foreach ($users as $user): ?>
         <div class="leader_row">
             <img src="/uploads/<?php echo $user->getPicture(); ?>" height="50" width="50" alt="" class="leader_pic" />

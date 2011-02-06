@@ -15,25 +15,3 @@
 
     <div class="headerbox"><span id="wing_need"><?php echo $need; ?></span> WPH Needed to Complete</div>
 </div>
-
-<script type="application/javascript">
-
-function updateDataCount() {
-    $.get('/api/count.json', function(data) {
-        $('#consumption_total').text(data.eaten);
-        $('#consumption_remain').text(data.remaining);
-        setTimeout('updateDataCount();', 1000);
-    });
-}
-
-function updateDataRate() {
-    $.get('/api/rate.json', function(data) {
-        $('#wing_rate').text(data.current);
-        $('#wing_need').text(data.need);
-        setTimeout('updateDataRate();', 1000);
-    });
-}
-
-$(document).ready(function() { updateDataCount(); });
-$(document).ready(function() { updateDataRate(); });
-</script>

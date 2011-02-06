@@ -18,17 +18,3 @@ $url .= '&chg=14.3,-1,1,1&chls=2,4,0&chm=B,D4EDFD,0,0,0'
 
 ?>
 <img id="chart_burnup" src="<?php echo $url; ?>" alt="Wings over time" />
-
-<?php if (!isset($js)): ?>
-<script type="application/javascript">
-
-function updateDataChart() {
-    $.get('/api/burnup', function(data) {
-        $('#chart_burnup').replaceWith(data);
-        setTimeout('updateDataChart();', 10000);
-    });
-}
-
-$(document).ready(function() { updateDataChart(); });
-</script>
-<?php endif; ?>

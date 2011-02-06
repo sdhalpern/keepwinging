@@ -30,6 +30,10 @@ api_burnup:
   url: /api/burnup
   param: { module: chart, action: burnup }
 
+api_leaderboard:
+  url: /api/leaderboard
+  param: { module: leaderboard, action: index }
+
 api_report:
   url: /api/report.json
   param: { module: data, action: report }
