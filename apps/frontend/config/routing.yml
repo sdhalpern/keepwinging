@@ -12,7 +12,7 @@ dashboard:
 
 feed:
   url: /feed
-  param: { module: feed, action: index }
+  param: { module: default, action: feed }
 
 api_count:
   url: /api/count.json
@@ -33,6 +33,10 @@ api_burnup:
 api_leaderboard:
   url: /api/leaderboard
   param: { module: leaderboard, action: index }
+
+api_feed:
+  url: /api/feed
+  param: { module: feed, action: index }
 
 api_report:
   url: /api/report.json
