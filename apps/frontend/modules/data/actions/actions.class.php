@@ -43,11 +43,11 @@ class dataActions extends sfActions {
         $e = new Feed();
         $e->setUser($user);
         if ($new_number == 100) {
-            $e->setText(' has just gotten 5 more wings, PUTTING THEM AT 100 WINGS!');
+            $e->setText(' just finished 5 more wings, PUTTING \'EM AT 100 WINGS!');
         } elseif ($new_number == 5) {
-            $e->setText(' has just gotten their first five wings!');
+            $e->setText(' just finished their first five wings!');
         } else {
-            $e->setText(' has just gotten 5 more wings, putting them up to ' . $new_number . ' wings!');
+            $e->setText(' just finished 5 more wings, and is now up to ' . $new_number . ' wings!');
         }
         $e->save();
         
