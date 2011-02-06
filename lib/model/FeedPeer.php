@@ -23,7 +23,7 @@ class FeedPeer extends BaseFeedPeer {
         $c->setLimit(10);
 
         if ($since) {
-            $c->add(self::CREATED_AT, $since, Criteria::GREATER_EQUAL);
+            $c->add(self::ID, $since, Criteria::GREATER_EQUAL);
         }
 
         return self::doSelect($c);

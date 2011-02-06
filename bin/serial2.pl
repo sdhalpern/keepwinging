@@ -25,41 +25,38 @@ my $RFID = Device::SerialPort->new(DEVICE_PATH)
     or die 'Couldn\'t open serial device ', DEVICE_PATH, ': ', $!, "\n";
 $RFID->baudrate(2400);
 
-#
-# apparently this lists the options used by the serial device.
-# is this really necessary?
-#
-for ($RFID->handshake) {
-    print $_, "\n";
-}
+$RFID->are_match("\n");
 
-#
-# five points if you actually know what this idiom does
-#
-#    select((select($logfile), $| = 1)[0]);
-#
+my $start = time;
+my $last_tag = undef;
 
-while (1) {
-    # force byte semantics inside the loop
-    use bytes;
-
-    # COLON HEX-DIGITS*10 NEWLINE SEMICOLON NEWLINE
-    # == 1 + 10 + 1 + 1 + 1 = 14 ASCII byte
-    my ($count, $buffer) = $RFID->read(14);
-
-    if ($count != 14) {
-        #warn "Incomplete read\n";
-        next;
+while ((my $buf = $RFID->lookfor) eq "") {
+    unless (defined $buf) {
+        die "Aborted without match\n";
     }
 
-    # this is where the magic happens: //s is a single-line match; the '.' will match a newline
-    # though you may just want to use the regex /([0-9a-f]+)/i and find the tag yourself
-    if ($buffer =~ /^:([0-9A-Fa-f]+).;[\r\n]/s) {
-        my $tag = $1;
+    print "Found ", $buf, " [", length $buf, "]\n";
 
-        print '>>> TAG = ', $tag, "\n";
-    } else {
-        warn "Couldn't find tag in buffer:\n", $buffer, "\n";
+    if ($buf =~ /([0-9a-f]+)/i) {
+        my $tag = $1;
+        print "Tag is ", $tag, "\n";
+
+        if (not defined $last_tag) {
+            # first check-in
+            $last_tag = $tag;
+        } else {
+            if ($tag eq $last_tag) {
+                # prevent double check-ins
+                if (time - $start > 30) {
+                    print "CHECKIN: ", $tag;
+                    $start = time;
+                }
+            } else {
+                $start = time;
+                print "CHECKIN: ", $tag;
+                $last_tag = $tag;
+            }
+        }
     }
 
     usleep 125_000;
