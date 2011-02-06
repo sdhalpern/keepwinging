@@ -32,3 +32,7 @@ $(document).ready(function() { updateDataCount(); });
 $(document).ready(function() { updateDataRate(); });
 $(document).ready(function() { updateDataChart(); });
 $(document).ready(function() { updateDataLeaderboard(); });
+
+jQuery(document).ready(function() {
+  jQuery(".timeago").timeago();
+});
