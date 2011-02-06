@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base class that represents a row from the 'user' table.
+ * Base class that represents a row from the 'feed' table.
  *
  * 
  *
@@ -11,14 +11,14 @@
  *
  * @package    lib.model.om
  */
-abstract class BaseUser extends BaseObject  implements Persistent {
+abstract class BaseFeed extends BaseObject  implements Persistent {
 
 
 	/**
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var        UserPeer
+	 * @var        FeedPeer
 	 */
 	protected static $peer;
 
@@ -29,22 +29,16 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	protected $id;
 
 	/**
-	 * The value for the name field.
-	 * @var        string
+	 * The value for the user_id field.
+	 * @var        int
 	 */
-	protected $name;
+	protected $user_id;
 
 	/**
-	 * The value for the picture field.
+	 * The value for the text field.
 	 * @var        string
 	 */
-	protected $picture;
-
-	/**
-	 * The value for the rfid_tag field.
-	 * @var        string
-	 */
-	protected $rfid_tag;
+	protected $text;
 
 	/**
 	 * The value for the created_at field.
@@ -53,24 +47,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	protected $created_at;
 
 	/**
-	 * @var        array Wing[] Collection to store aggregation of Wing objects.
+	 * @var        User
 	 */
-	protected $collWings;
-
-	/**
-	 * @var        Criteria The criteria used to select the current contents of collWings.
-	 */
-	private $lastWingCriteria = null;
-
-	/**
-	 * @var        array Feed[] Collection to store aggregation of Feed objects.
-	 */
-	protected $collFeeds;
-
-	/**
-	 * @var        Criteria The criteria used to select the current contents of collFeeds.
-	 */
-	private $lastFeedCriteria = null;
+	protected $aUser;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -88,7 +67,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 	// symfony behavior
 	
-	const PEER = 'UserPeer';
+	const PEER = 'FeedPeer';
 
 	/**
 	 * Get the [id] column value.
@@ -101,33 +80,23 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	}
 
 	/**
-	 * Get the [name] column value.
+	 * Get the [user_id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
-	public function getName()
+	public function getUserId()
 	{
-		return $this->name;
+		return $this->user_id;
 	}
 
 	/**
-	 * Get the [picture] column value.
+	 * Get the [text] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getPicture()
+	public function getText()
 	{
-		return $this->picture;
-	}
-
-	/**
-	 * Get the [rfid_tag] column value.
-	 * 
-	 * @return     string
-	 */
-	public function getRfidTag()
-	{
-		return $this->rfid_tag;
+		return $this->text;
 	}
 
 	/**
@@ -172,7 +141,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     Feed The current object (for fluent API support)
 	 */
 	public function setId($v)
 	{
@@ -182,78 +151,62 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = UserPeer::ID;
+			$this->modifiedColumns[] = FeedPeer::ID;
 		}
 
 		return $this;
 	} // setId()
 
 	/**
-	 * Set the value of [name] column.
+	 * Set the value of [user_id] column.
 	 * 
-	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @param      int $v new value
+	 * @return     Feed The current object (for fluent API support)
 	 */
-	public function setName($v)
+	public function setUserId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
-		if ($this->name !== $v) {
-			$this->name = $v;
-			$this->modifiedColumns[] = UserPeer::NAME;
+		if ($this->user_id !== $v) {
+			$this->user_id = $v;
+			$this->modifiedColumns[] = FeedPeer::USER_ID;
+		}
+
+		if ($this->aUser !== null && $this->aUser->getId() !== $v) {
+			$this->aUser = null;
 		}
 
 		return $this;
-	} // setName()
+	} // setUserId()
 
 	/**
-	 * Set the value of [picture] column.
+	 * Set the value of [text] column.
 	 * 
 	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
+	 * @return     Feed The current object (for fluent API support)
 	 */
-	public function setPicture($v)
+	public function setText($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->picture !== $v) {
-			$this->picture = $v;
-			$this->modifiedColumns[] = UserPeer::PICTURE;
+		if ($this->text !== $v) {
+			$this->text = $v;
+			$this->modifiedColumns[] = FeedPeer::TEXT;
 		}
 
 		return $this;
-	} // setPicture()
-
-	/**
-	 * Set the value of [rfid_tag] column.
-	 * 
-	 * @param      string $v new value
-	 * @return     User The current object (for fluent API support)
-	 */
-	public function setRfidTag($v)
-	{
-		if ($v !== null) {
-			$v = (string) $v;
-		}
-
-		if ($this->rfid_tag !== $v) {
-			$this->rfid_tag = $v;
-			$this->modifiedColumns[] = UserPeer::RFID_TAG;
-		}
-
-		return $this;
-	} // setRfidTag()
+	} // setText()
 
 	/**
 	 * Sets the value of [created_at] column to a normalized version of the date/time value specified.
 	 * 
 	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
 	 *						be treated as NULL for temporal objects.
-	 * @return     User The current object (for fluent API support)
+	 * @return     Feed The current object (for fluent API support)
 	 */
 	public function setCreatedAt($v)
 	{
@@ -290,7 +243,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 					)
 			{
 				$this->created_at = ($dt ? $dt->format('Y-m-d H:i:s') : null);
-				$this->modifiedColumns[] = UserPeer::CREATED_AT;
+				$this->modifiedColumns[] = FeedPeer::CREATED_AT;
 			}
 		} // if either are not null
 
@@ -330,10 +283,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->picture = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->rfid_tag = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->created_at = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->user_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+			$this->text = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->created_at = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -343,10 +295,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			}
 
 			// FIXME - using NUM_COLUMNS may be clearer.
-			return $startcol + 5; // 5 = UserPeer::NUM_COLUMNS - UserPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = FeedPeer::NUM_COLUMNS - FeedPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating User object", $e);
+			throw new PropelException("Error populating Feed object", $e);
 		}
 	}
 
@@ -366,6 +318,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	public function ensureConsistency()
 	{
 
+		if ($this->aUser !== null && $this->user_id !== $this->aUser->getId()) {
+			$this->aUser = null;
+		}
 	} // ensureConsistency
 
 	/**
@@ -389,13 +344,13 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(FeedPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		// We don't need to alter the object instance pool; we're just modifying this instance
 		// already in the pool.
 
-		$stmt = UserPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+		$stmt = FeedPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
 		$row = $stmt->fetch(PDO::FETCH_NUM);
 		$stmt->closeCursor();
 		if (!$row) {
@@ -405,12 +360,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collWings = null;
-			$this->lastWingCriteria = null;
-
-			$this->collFeeds = null;
-			$this->lastFeedCriteria = null;
-
+			$this->aUser = null;
 		} // if (deep)
 	}
 
@@ -430,14 +380,14 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(FeedPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
 		try {
 			$ret = $this->preDelete($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseUser:delete:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseFeed:delete:pre') as $callable)
 			{
 			  if (call_user_func($callable, $this, $con))
 			  {
@@ -448,10 +398,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			}
 
 			if ($ret) {
-				UserPeer::doDelete($this, $con);
+				FeedPeer::doDelete($this, $con);
 				$this->postDelete($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseUser:delete:post') as $callable)
+				foreach (sfMixer::getCallables('BaseFeed:delete:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con);
 				}
@@ -487,7 +437,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(UserPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(FeedPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		
 		$con->beginTransaction();
@@ -495,7 +445,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		try {
 			$ret = $this->preSave($con);
 			// symfony_behaviors behavior
-			foreach (sfMixer::getCallables('BaseUser:save:pre') as $callable)
+			foreach (sfMixer::getCallables('BaseFeed:save:pre') as $callable)
 			{
 			  if (is_integer($affectedRows = call_user_func($callable, $this, $con)))
 			  {
@@ -510,7 +460,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			if ($isInsert) {
 				$ret = $ret && $this->preInsert($con);
 				// symfony_timestampable behavior
-				if (!$this->isColumnModified(UserPeer::CREATED_AT))
+				if (!$this->isColumnModified(FeedPeer::CREATED_AT))
 				{
 				  $this->setCreatedAt(time());
 				}
@@ -527,12 +477,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				}
 				$this->postSave($con);
 				// symfony_behaviors behavior
-				foreach (sfMixer::getCallables('BaseUser:save:post') as $callable)
+				foreach (sfMixer::getCallables('BaseFeed:save:post') as $callable)
 				{
 				  call_user_func($callable, $this, $con, $affectedRows);
 				}
 
-				UserPeer::addInstanceToPool($this);
+				FeedPeer::addInstanceToPool($this);
 			} else {
 				$affectedRows = 0;
 			}
@@ -561,14 +511,26 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 		if (!$this->alreadyInSave) {
 			$this->alreadyInSave = true;
 
+			// We call the save method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUser !== null) {
+				if ($this->aUser->isModified() || $this->aUser->isNew()) {
+					$affectedRows += $this->aUser->save($con);
+				}
+				$this->setUser($this->aUser);
+			}
+
 			if ($this->isNew() ) {
-				$this->modifiedColumns[] = UserPeer::ID;
+				$this->modifiedColumns[] = FeedPeer::ID;
 			}
 
 			// If this object has been modified, then save it to the database.
 			if ($this->isModified()) {
 				if ($this->isNew()) {
-					$pk = UserPeer::doInsert($this, $con);
+					$pk = FeedPeer::doInsert($this, $con);
 					$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which
 										 // should always be true here (even though technically
 										 // BasePeer::doInsert() can insert multiple rows).
@@ -577,26 +539,10 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 
 					$this->setNew(false);
 				} else {
-					$affectedRows += UserPeer::doUpdate($this, $con);
+					$affectedRows += FeedPeer::doUpdate($this, $con);
 				}
 
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
-			}
-
-			if ($this->collWings !== null) {
-				foreach ($this->collWings as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
-			if ($this->collFeeds !== null) {
-				foreach ($this->collFeeds as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
 			}
 
 			$this->alreadyInSave = false;
@@ -665,26 +611,22 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 			$failureMap = array();
 
 
-			if (($retval = UserPeer::doValidate($this, $columns)) !== true) {
-				$failureMap = array_merge($failureMap, $retval);
+			// We call the validate method on the following object(s) if they
+			// were passed to this object by their coresponding set
+			// method.  This object relates to these object(s) by a
+			// foreign key reference.
+
+			if ($this->aUser !== null) {
+				if (!$this->aUser->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aUser->getValidationFailures());
+				}
 			}
 
 
-				if ($this->collWings !== null) {
-					foreach ($this->collWings as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
+			if (($retval = FeedPeer::doValidate($this, $columns)) !== true) {
+				$failureMap = array_merge($failureMap, $retval);
+			}
 
-				if ($this->collFeeds !== null) {
-					foreach ($this->collFeeds as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
 
 
 			$this->alreadyInValidation = false;
@@ -704,7 +646,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = FeedPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		$field = $this->getByPosition($pos);
 		return $field;
 	}
@@ -723,15 +665,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				return $this->getId();
 				break;
 			case 1:
-				return $this->getName();
+				return $this->getUserId();
 				break;
 			case 2:
-				return $this->getPicture();
+				return $this->getText();
 				break;
 			case 3:
-				return $this->getRfidTag();
-				break;
-			case 4:
 				return $this->getCreatedAt();
 				break;
 			default:
@@ -753,13 +692,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = FeedPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
-			$keys[1] => $this->getName(),
-			$keys[2] => $this->getPicture(),
-			$keys[3] => $this->getRfidTag(),
-			$keys[4] => $this->getCreatedAt(),
+			$keys[1] => $this->getUserId(),
+			$keys[2] => $this->getText(),
+			$keys[3] => $this->getCreatedAt(),
 		);
 		return $result;
 	}
@@ -776,7 +714,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = UserPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = FeedPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -795,15 +733,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 				$this->setId($value);
 				break;
 			case 1:
-				$this->setName($value);
+				$this->setUserId($value);
 				break;
 			case 2:
-				$this->setPicture($value);
+				$this->setText($value);
 				break;
 			case 3:
-				$this->setRfidTag($value);
-				break;
-			case 4:
 				$this->setCreatedAt($value);
 				break;
 		} // switch()
@@ -828,13 +763,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = UserPeer::getFieldNames($keyType);
+		$keys = FeedPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setPicture($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setRfidTag($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+		if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setText($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
 	}
 
 	/**
@@ -844,13 +778,12 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
+		$criteria = new Criteria(FeedPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(UserPeer::ID)) $criteria->add(UserPeer::ID, $this->id);
-		if ($this->isColumnModified(UserPeer::NAME)) $criteria->add(UserPeer::NAME, $this->name);
-		if ($this->isColumnModified(UserPeer::PICTURE)) $criteria->add(UserPeer::PICTURE, $this->picture);
-		if ($this->isColumnModified(UserPeer::RFID_TAG)) $criteria->add(UserPeer::RFID_TAG, $this->rfid_tag);
-		if ($this->isColumnModified(UserPeer::CREATED_AT)) $criteria->add(UserPeer::CREATED_AT, $this->created_at);
+		if ($this->isColumnModified(FeedPeer::ID)) $criteria->add(FeedPeer::ID, $this->id);
+		if ($this->isColumnModified(FeedPeer::USER_ID)) $criteria->add(FeedPeer::USER_ID, $this->user_id);
+		if ($this->isColumnModified(FeedPeer::TEXT)) $criteria->add(FeedPeer::TEXT, $this->text);
+		if ($this->isColumnModified(FeedPeer::CREATED_AT)) $criteria->add(FeedPeer::CREATED_AT, $this->created_at);
 
 		return $criteria;
 	}
@@ -865,9 +798,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(UserPeer::DATABASE_NAME);
+		$criteria = new Criteria(FeedPeer::DATABASE_NAME);
 
-		$criteria->add(UserPeer::ID, $this->id);
+		$criteria->add(FeedPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -898,40 +831,18 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 * If desired, this method can also make copies of all associated (fkey referrers)
 	 * objects.
 	 *
-	 * @param      object $copyObj An object of User (or compatible) type.
+	 * @param      object $copyObj An object of Feed (or compatible) type.
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
 	 * @throws     PropelException
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 
-		$copyObj->setName($this->name);
+		$copyObj->setUserId($this->user_id);
 
-		$copyObj->setPicture($this->picture);
-
-		$copyObj->setRfidTag($this->rfid_tag);
+		$copyObj->setText($this->text);
 
 		$copyObj->setCreatedAt($this->created_at);
-
-
-		if ($deepCopy) {
-			// important: temporarily setNew(false) because this affects the behavior of
-			// the getter/setter methods for fkey referrer objects.
-			$copyObj->setNew(false);
-
-			foreach ($this->getWings() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addWing($relObj->copy($deepCopy));
-				}
-			}
-
-			foreach ($this->getFeeds() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addFeed($relObj->copy($deepCopy));
-				}
-			}
-
-		} // if ($deepCopy)
 
 
 		$copyObj->setNew(true);
@@ -949,7 +860,7 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 * objects.
 	 *
 	 * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-	 * @return     User Clone of current object.
+	 * @return     Feed Clone of current object.
 	 * @throws     PropelException
 	 */
 	public function copy($deepCopy = false)
@@ -968,322 +879,63 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return     UserPeer
+	 * @return     FeedPeer
 	 */
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new UserPeer();
+			self::$peer = new FeedPeer();
 		}
 		return self::$peer;
 	}
 
 	/**
-	 * Clears out the collWings collection (array).
+	 * Declares an association between this object and a User object.
 	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addWings()
-	 */
-	public function clearWings()
-	{
-		$this->collWings = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collWings collection (array).
-	 *
-	 * By default this just sets the collWings collection to an empty array (like clearcollWings());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initWings()
-	{
-		$this->collWings = array();
-	}
-
-	/**
-	 * Gets an array of Wing objects which contain a foreign key that references this object.
-	 *
-	 * If this collection has already been initialized with an identical Criteria, it returns the collection.
-	 * Otherwise if this User has previously been saved, it will retrieve
-	 * related Wings from storage. If this User is new, it will return
-	 * an empty collection or the current collection, the criteria is ignored on a new object.
-	 *
-	 * @param      PropelPDO $con
-	 * @param      Criteria $criteria
-	 * @return     array Wing[]
+	 * @param      User $v
+	 * @return     Feed The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function getWings($criteria = null, PropelPDO $con = null)
+	public function setUser(User $v = null)
 	{
-		if ($criteria === null) {
-			$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		}
-		elseif ($criteria instanceof Criteria)
-		{
-			$criteria = clone $criteria;
-		}
-
-		if ($this->collWings === null) {
-			if ($this->isNew()) {
-			   $this->collWings = array();
-			} else {
-
-				$criteria->add(WingPeer::USER_ID, $this->id);
-
-				WingPeer::addSelectColumns($criteria);
-				$this->collWings = WingPeer::doSelect($criteria, $con);
-			}
+		if ($v === null) {
+			$this->setUserId(NULL);
 		} else {
-			// criteria has no effect for a new object
-			if (!$this->isNew()) {
-				// the following code is to determine if a new query is
-				// called for.  If the criteria is the same as the last
-				// one, just return the collection.
-
-
-				$criteria->add(WingPeer::USER_ID, $this->id);
-
-				WingPeer::addSelectColumns($criteria);
-				if (!isset($this->lastWingCriteria) || !$this->lastWingCriteria->equals($criteria)) {
-					$this->collWings = WingPeer::doSelect($criteria, $con);
-				}
-			}
+			$this->setUserId($v->getId());
 		}
-		$this->lastWingCriteria = $criteria;
-		return $this->collWings;
+
+		$this->aUser = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the User object, it will not be re-added.
+		if ($v !== null) {
+			$v->addFeed($this);
+		}
+
+		return $this;
 	}
 
+
 	/**
-	 * Returns the number of related Wing objects.
+	 * Get the associated User object
 	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related Wing objects.
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     User The associated User object.
 	 * @throws     PropelException
 	 */
-	public function countWings(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function getUser(PropelPDO $con = null)
 	{
-		if ($criteria === null) {
-			$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		} else {
-			$criteria = clone $criteria;
+		if ($this->aUser === null && ($this->user_id !== null)) {
+			$this->aUser = UserPeer::retrieveByPk($this->user_id);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aUser->addFeeds($this);
+			 */
 		}
-
-		if ($distinct) {
-			$criteria->setDistinct();
-		}
-
-		$count = null;
-
-		if ($this->collWings === null) {
-			if ($this->isNew()) {
-				$count = 0;
-			} else {
-
-				$criteria->add(WingPeer::USER_ID, $this->id);
-
-				$count = WingPeer::doCount($criteria, false, $con);
-			}
-		} else {
-			// criteria has no effect for a new object
-			if (!$this->isNew()) {
-				// the following code is to determine if a new query is
-				// called for.  If the criteria is the same as the last
-				// one, just return count of the collection.
-
-
-				$criteria->add(WingPeer::USER_ID, $this->id);
-
-				if (!isset($this->lastWingCriteria) || !$this->lastWingCriteria->equals($criteria)) {
-					$count = WingPeer::doCount($criteria, false, $con);
-				} else {
-					$count = count($this->collWings);
-				}
-			} else {
-				$count = count($this->collWings);
-			}
-		}
-		return $count;
-	}
-
-	/**
-	 * Method called to associate a Wing object to this object
-	 * through the Wing foreign key attribute.
-	 *
-	 * @param      Wing $l Wing
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addWing(Wing $l)
-	{
-		if ($this->collWings === null) {
-			$this->initWings();
-		}
-		if (!in_array($l, $this->collWings, true)) { // only add it if the **same** object is not already associated
-			array_push($this->collWings, $l);
-			$l->setUser($this);
-		}
-	}
-
-	/**
-	 * Clears out the collFeeds collection (array).
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addFeeds()
-	 */
-	public function clearFeeds()
-	{
-		$this->collFeeds = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collFeeds collection (array).
-	 *
-	 * By default this just sets the collFeeds collection to an empty array (like clearcollFeeds());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initFeeds()
-	{
-		$this->collFeeds = array();
-	}
-
-	/**
-	 * Gets an array of Feed objects which contain a foreign key that references this object.
-	 *
-	 * If this collection has already been initialized with an identical Criteria, it returns the collection.
-	 * Otherwise if this User has previously been saved, it will retrieve
-	 * related Feeds from storage. If this User is new, it will return
-	 * an empty collection or the current collection, the criteria is ignored on a new object.
-	 *
-	 * @param      PropelPDO $con
-	 * @param      Criteria $criteria
-	 * @return     array Feed[]
-	 * @throws     PropelException
-	 */
-	public function getFeeds($criteria = null, PropelPDO $con = null)
-	{
-		if ($criteria === null) {
-			$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		}
-		elseif ($criteria instanceof Criteria)
-		{
-			$criteria = clone $criteria;
-		}
-
-		if ($this->collFeeds === null) {
-			if ($this->isNew()) {
-			   $this->collFeeds = array();
-			} else {
-
-				$criteria->add(FeedPeer::USER_ID, $this->id);
-
-				FeedPeer::addSelectColumns($criteria);
-				$this->collFeeds = FeedPeer::doSelect($criteria, $con);
-			}
-		} else {
-			// criteria has no effect for a new object
-			if (!$this->isNew()) {
-				// the following code is to determine if a new query is
-				// called for.  If the criteria is the same as the last
-				// one, just return the collection.
-
-
-				$criteria->add(FeedPeer::USER_ID, $this->id);
-
-				FeedPeer::addSelectColumns($criteria);
-				if (!isset($this->lastFeedCriteria) || !$this->lastFeedCriteria->equals($criteria)) {
-					$this->collFeeds = FeedPeer::doSelect($criteria, $con);
-				}
-			}
-		}
-		$this->lastFeedCriteria = $criteria;
-		return $this->collFeeds;
-	}
-
-	/**
-	 * Returns the number of related Feed objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related Feed objects.
-	 * @throws     PropelException
-	 */
-	public function countFeeds(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if ($criteria === null) {
-			$criteria = new Criteria(UserPeer::DATABASE_NAME);
-		} else {
-			$criteria = clone $criteria;
-		}
-
-		if ($distinct) {
-			$criteria->setDistinct();
-		}
-
-		$count = null;
-
-		if ($this->collFeeds === null) {
-			if ($this->isNew()) {
-				$count = 0;
-			} else {
-
-				$criteria->add(FeedPeer::USER_ID, $this->id);
-
-				$count = FeedPeer::doCount($criteria, false, $con);
-			}
-		} else {
-			// criteria has no effect for a new object
-			if (!$this->isNew()) {
-				// the following code is to determine if a new query is
-				// called for.  If the criteria is the same as the last
-				// one, just return count of the collection.
-
-
-				$criteria->add(FeedPeer::USER_ID, $this->id);
-
-				if (!isset($this->lastFeedCriteria) || !$this->lastFeedCriteria->equals($criteria)) {
-					$count = FeedPeer::doCount($criteria, false, $con);
-				} else {
-					$count = count($this->collFeeds);
-				}
-			} else {
-				$count = count($this->collFeeds);
-			}
-		}
-		return $count;
-	}
-
-	/**
-	 * Method called to associate a Feed object to this object
-	 * through the Feed foreign key attribute.
-	 *
-	 * @param      Feed $l Feed
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addFeed(Feed $l)
-	{
-		if ($this->collFeeds === null) {
-			$this->initFeeds();
-		}
-		if (!in_array($l, $this->collFeeds, true)) { // only add it if the **same** object is not already associated
-			array_push($this->collFeeds, $l);
-			$l->setUser($this);
-		}
+		return $this->aUser;
 	}
 
 	/**
@@ -1298,20 +950,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collWings) {
-				foreach ((array) $this->collWings as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
-			if ($this->collFeeds) {
-				foreach ((array) $this->collFeeds as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 		} // if ($deep)
 
-		$this->collWings = null;
-		$this->collFeeds = null;
+			$this->aUser = null;
 	}
 
 	// symfony_behaviors behavior
@@ -1321,9 +962,9 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	 */
 	public function __call($method, $arguments)
 	{
-	  if (!$callable = sfMixer::getCallable('BaseUser:'.$method))
+	  if (!$callable = sfMixer::getCallable('BaseFeed:'.$method))
 	  {
-	    throw new sfException(sprintf('Call to undefined method BaseUser::%s', $method));
+	    throw new sfException(sprintf('Call to undefined method BaseFeed::%s', $method));
 	  }
 	
 	  array_unshift($arguments, $this);
@@ -1331,4 +972,4 @@ abstract class BaseUser extends BaseObject  implements Persistent {
 	  return call_user_func_array($callable, $arguments);
 	}
 
-} // BaseUser
+} // BaseFeed

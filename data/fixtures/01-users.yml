@@ -5,3 +5,10 @@ User:
     rfid_tag: Tag_<?php echoln($i); ?>
     picture: 'justin.jpg'
 <?php endfor; ?>
+
+Feed:
+<?php for ($i = 1; $i <= 8; $i++): for ($x = 1; $x < 12; $x++): ?>
+  Feed_<?php echo $i; ?>_<?php echo $x; ?>:
+    user_id: User_<?php echoln($i); ?>
+    text: 'is up to <?php echo $i * 5; ?> wings.'
+<?php endfor; endfor; ?>

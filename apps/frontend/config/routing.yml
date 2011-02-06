@@ -10,6 +10,10 @@ dashboard:
   url: /dashboard
   param: { module: default, action: dashboard }
 
+dashboard:
+  url: /feed
+  param: { module: default, action: feed }
+
 api_count:
   url: /api/count.json
   param: { module: data, action: count }

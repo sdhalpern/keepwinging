@@ -43,6 +43,28 @@ CREATE TABLE `wing`
 )Engine=InnoDB;
 
 #-----------------------------------------------------------------------------
+#-- feed
+#-----------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `feed`;
+
+
+CREATE TABLE `feed`
+(
+	`id` INTEGER  NOT NULL AUTO_INCREMENT,
+	`user_id` INTEGER(11)  NOT NULL,
+	`text` VARCHAR(255)  NOT NULL,
+	`created_at` DATETIME,
+	PRIMARY KEY (`id`),
+	INDEX `feed_FI_1` (`user_id`),
+	CONSTRAINT `feed_FK_1`
+		FOREIGN KEY (`user_id`)
+		REFERENCES `user` (`id`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+)Engine=InnoDB;
+
+#-----------------------------------------------------------------------------
 #-- scan_log
 #-----------------------------------------------------------------------------
 

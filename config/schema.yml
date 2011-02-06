@@ -33,6 +33,22 @@ propel:
       required: true
     created_at: ~
 
+  feed:
+    id: ~
+    user_id:
+      type: integer
+      size: 11
+      required: true
+      foreignTable: user
+      foreignReference: id
+      onDelete: cascade
+      onUpdate: cascade
+    text:
+      type: varchar
+      size: 255
+      required: true
+    created_at: ~
+
   scan_log:
     id: ~
     tag:
