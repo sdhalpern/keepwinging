@@ -108,8 +108,6 @@ class WingPeer extends BaseWingPeer {
         $stmt = $con->prepare($sql);
         
         $time = date('Y-m-d G:i:s', strtotime('1 hour ago'));
-        
-        var_dump($time);
 
         $stmt->bindValue(':time', $time);
         $r = $stmt->execute();
