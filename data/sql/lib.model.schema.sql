@@ -14,6 +14,7 @@ CREATE TABLE `user`
 (
 	`id` INTEGER  NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255)  NOT NULL,
+	`picture` VARCHAR(255)  NOT NULL,
 	`rfid_tag` VARCHAR(255)  NOT NULL,
 	`rfid_number` INTEGER(11)  NOT NULL,
 	`created_at` DATETIME,

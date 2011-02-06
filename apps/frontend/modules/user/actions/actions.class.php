@@ -6,10 +6,11 @@ class userActions extends sfActions {
         $user->setRfidTag($request->getParameter('key'));
 
         $user = new UserForm($user);
-        
+
 
         if ($request->getMethod() == 'POST') {
-            $user->bind($request->getParameter($user->getName()));
+            $user->bind($request->getParameter($user->getName()),
+                        $request->getFiles());
 
             if ($user->isValid()) {
                 $user->save();

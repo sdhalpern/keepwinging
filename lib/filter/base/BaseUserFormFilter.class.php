@@ -13,6 +13,7 @@ abstract class BaseUserFormFilter extends BaseFormFilterPropel
   {
     $this->setWidgets(array(
       'name'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'picture'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'rfid_tag'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'rfid_number' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'created_at'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate())),
@@ -20,6 +21,7 @@ abstract class BaseUserFormFilter extends BaseFormFilterPropel
 
     $this->setValidators(array(
       'name'        => new sfValidatorPass(array('required' => false)),
+      'picture'     => new sfValidatorPass(array('required' => false)),
       'rfid_tag'    => new sfValidatorPass(array('required' => false)),
       'rfid_number' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'created_at'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDate(array('required' => false)), 'to_date' => new sfValidatorDate(array('required' => false)))),
@@ -42,6 +44,7 @@ abstract class BaseUserFormFilter extends BaseFormFilterPropel
     return array(
       'id'          => 'Number',
       'name'        => 'Text',
+      'picture'     => 'Text',
       'rfid_tag'    => 'Text',
       'rfid_number' => 'Number',
       'created_at'  => 'Date',

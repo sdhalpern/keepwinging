@@ -2,10 +2,14 @@ propel:
   user:
     id: ~
     name:
-      type: VARCHAR
+      type: varchar
       size: 255
       required: true
       unique: true
+    picture:
+      type: varchar
+      size: 255,
+      required: true
     rfid_tag:
       type: varchar
       size: 255
@@ -21,15 +25,15 @@ propel:
   wing:
     id: ~
     user_id:
-      type: INTEGER
+      type: integer
       size: 11
       required: true
       foreignTable: user
       foreignReference: id
-      onDelete: CASCADE
-      onUpdate: CASCADE
+      onDelete: cascade
+      onUpdate: cascade
     number:
-      type: INTEGER
+      type: integer
       size: 11
       required: true
     created_at: ~
@@ -37,7 +41,7 @@ propel:
   scan_log:
     id: ~
     tag:
-      type: VARCHAR
+      type: varchar
       size: 255
       required: true
     skipped:
