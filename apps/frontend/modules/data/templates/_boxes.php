@@ -11,9 +11,9 @@
 </div>
 
 <div class="boxes">
-    <div class="headerbox rightbump" id="consumption_remain"><?php echo $remain; ?> Wings Remaining</div>
+    <div class="headerbox rightbump"><span id="consumption_remain"><?php echo $remain; ?></span> Wings Remaining</div>
 
-    <div class="headerbox" id="wing_need"><?php echo $need; ?> WPH Needed to Complete</div>
+    <div class="headerbox"><span id="wing_need"><?php echo $need; ?></span> WPH Needed to Complete</div>
 </div>
 
 <script type="application/javascript">
@@ -21,7 +21,7 @@
 function updateDataCount() {
     $.get('/api/count.json', function(data) {
         $('#consumption_total').text(data.eaten);
-        $('#consumption_remaing').text(data.remaining);
+        $('#consumption_remain').text(data.remaining);
         setTimeout('updateDataCount();', 1000);
     });
 }
