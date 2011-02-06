@@ -33,7 +33,7 @@ class WingPeer extends BaseWingPeer {
             return 0;
         }
 
-        return $stmt->fetchColumn(0);
+        return (int)$stmt->fetchColumn(0);
     }
 
     public static function getEaten() {
@@ -46,7 +46,7 @@ class WingPeer extends BaseWingPeer {
             return 0;
         }
 
-        return $stmt->fetchColumn(0);
+        return (int)$stmt->fetchColumn(0);
     }
 
     public static function getRemaining() {
@@ -55,7 +55,7 @@ class WingPeer extends BaseWingPeer {
             $r = 0;
         }
 
-        return $r;
+        return (int)$r;
     }
 
     public static function getEvery5Minutes() {
@@ -123,7 +123,7 @@ class WingPeer extends BaseWingPeer {
             $endtime = 1;
         }
 
-        return ceil(WingPeer::getRemaining() / $endtime);
+        return (int)ceil(WingPeer::getRemaining() / $endtime);
     }
 
     public static function getBurnup() {
