@@ -28,7 +28,7 @@ class User extends BaseUser {
     
     public function incrementWingConsumption() {
         $wing = new Wing();
-        $wing->setNumber(5);
+        $wing->setNumber(1);
         $wing->setUser($this);
         $wing->save();
 
