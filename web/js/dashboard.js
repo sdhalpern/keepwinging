@@ -8,7 +8,7 @@ function updateDataLeaderboard() {
 function updateDataChart() {
     $.get('/api/burnup', function(data) {
         $('#chart_burnup').replaceWith(data);
-        setTimeout('updateDataChart();', 5000);
+        setTimeout('updateDataChart();', 2500);
     });
 }
 
@@ -16,7 +16,7 @@ function updateDataCount() {
     $.get('/api/count.json', function(data) {
         $('#consumption_total').text(data.eaten);
         $('#consumption_remain').text(data.remaining);
-        setTimeout('updateDataCount();', 5000);
+        setTimeout('updateDataCount();', 2500);
     });
 }
 
